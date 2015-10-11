@@ -29,7 +29,7 @@ Jurassic.Game.prototype = {
     for (var i = 0; i < 200; i++) {
       var owen = new Jurassic.Human(this, this.world.randomX, this.world.randomY, 'green');
       this.groups.humans.add(owen);
-      owen.max_velocity = 150;
+      owen.maxVelocity = 150;
       owen.stunEnabled = false;
     }
 

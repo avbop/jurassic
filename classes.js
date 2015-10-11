@@ -23,14 +23,20 @@ Jurassic.directionTo = function (start, finish) {
       ret = dtheta;
     }
   }
-  return ret;
+  // Normalise to positive angles.
+  if (ret < 0) {
+    ret += 2 * Math.PI;
+  }
+  // Normalise to 0 <= ret < 2π.
+  return ret % (2 * Math.PI);
 };
 
 Jurassic.Character = function (game, name, x, y, velocity, health, attack, attackPercent, defendPercent, assetkey) {
   Phaser.Sprite.call(this, game, x, y, assetkey);
   game.physics.arcade.enable(this);
   this.body.collideWorldBounds = true;
-  this.max_velocity = velocity;
+  this.maxVelocity = velocity;
+  this.maxTurn = 5 * Math.PI / 180;
   this.velocity = 0;
   this.direction = 0;
   this.target = null;
@@ -56,8 +62,18 @@ Jurassic.Character.prototype.move = function () {
     this.target = null;
   }
   if (this.target) {
-    this.direction = Jurassic.directionTo(this, this.target);
-    this.velocity = this.max_velocity;
+    var theta = Jurassic.directionTo(this, this.target);
+    // theta is normalised to 0 <= theta < 2π.
+    dthetaPositive = this.direction - theta;
+    dthetaNegative = theta - this.direction;
+    if (this.direction - theta > this.maxTurn) {
+      this.direction -= this.maxTurn;
+    } else if (theta - this.direction > this.maxTurn) {
+      this.direction += this.maxTurn;
+    } else {
+      this.direction = theta;
+    }
+    this.velocity = this.maxVelocity;
   } else if (this.alive && !this.stunned) {
     this.defaultMove();
   } else {
@@ -118,7 +134,7 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
   } else if (rand < .2) {
     this.direction -= Math.PI / 4;
   }
-  this.velocity = this.max_velocity;
+  this.velocity = this.maxVelocity;
 };
 
 Jurassic.Human = function (game, x, y, colour) {
