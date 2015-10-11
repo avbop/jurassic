@@ -25,6 +25,7 @@ Jurassic.Game.prototype = {
     this.groups.dinos = this.add.group();
     var rex = new Jurassic.Dinosaur(this, 100, 100, 10, 'red');
     var fido = new Jurassic.Dinosaur(this, 300, 100, 100, 'green');
+    console.log(rex);
     this.groups.dinos.add(rex);
     this.groups.dinos.add(fido);
     this.dinos.push(rex);
@@ -34,6 +35,5 @@ Jurassic.Game.prototype = {
   update: function () {
     // [FPS] this.fpsText.setText(this.time.fps || '--');
     this.dinos[0].setTarget(this.dinos[1]);
-    console.log(this.dinos[0].direction * 180 / Math.PI);
   }
 };

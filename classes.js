@@ -26,26 +26,24 @@ Jurassic.directionTo = function (start, finish) {
   return ret;
 };
 
-Jurassic.Dinosaur = function (game, x, y, velocity, colour) {
-  Phaser.Sprite.call(this, game, x, y, colour + 'circle');
-  this.scale.setTo(10/255, 10/255);
+Jurassic.Character = function (game, x, y, velocity, assetkey) {
+  Phaser.Sprite.call(this, game, x, y, assetkey);
   game.physics.p2.enable(this);
-  this.body.setCircle(5);
   this.body.collideWorldBounds = true;
   this.velocity = velocity;
   this.direction = 0;
   this.target = null;
-  this.id = Jurassic.Dinosaur.idcounter++;
+  this.id = Jurassic.Character.idcounter++;
 };
-Jurassic.Dinosaur.prototype = Object.create(Phaser.Sprite.prototype);
-Jurassic.Dinosaur.prototype.constructor = Jurassic.Dinosaur;
-Jurassic.Dinosaur.idcounter = 0;
-Jurassic.Dinosaur.prototype.update = function () {
+Jurassic.Character.prototype = Object.create(Phaser.Sprite.prototype);
+Jurassic.Character.prototype.constructor = Jurassic.Character;
+Jurassic.Character.idcounter = 0;
+Jurassic.Character.prototype.update = function () {
   this.move();
   this.body.velocity.x = this.velocity * Math.cos(this.direction);
   this.body.velocity.y = this.velocity * Math.sin(this.direction);
 };
-Jurassic.Dinosaur.prototype.move = function () {
+Jurassic.Character.prototype.move = function () {
   if (this.target) {
     this.direction = Jurassic.directionTo(this, this.target);
   } else {
@@ -57,6 +55,14 @@ Jurassic.Dinosaur.prototype.move = function () {
     }
   }
 };
-Jurassic.Dinosaur.prototype.setTarget = function (target) {
+Jurassic.Character.prototype.setTarget = function (target) {
   this.target = target;
 };
+
+Jurassic.Dinosaur = function (game, x, y, velocity, colour) {
+  Jurassic.Character.call(this, game, x, y, velocity, colour + 'dino');
+  this.scale.setTo(10/255, 10/255);
+  this.body.setCircle(5);
+}
+Jurassic.Dinosaur.prototype = Object.create(Jurassic.Character.prototype);
+Jurassic.Dinosaur.prototype.constructor = Jurassic.Dinosaur;

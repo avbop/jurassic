@@ -41,8 +41,10 @@ Jurassic.Preloader.prototype = {
     this.preloadBar.scale.setTo(1, 0.5);
     this.load.setPreloadSprite(this.preloadBar);
 
-    this.load.image('redcircle', 'assets/redcircle.png');
-    this.load.image('greencircle', 'assets/greencircle.png');
+    this.load.image('reddino', 'assets/redcircle.png');
+    this.load.image('greendino', 'assets/greencircle.png');
+    this.load.image('redhuman', 'assets/redsquare.png');
+    this.load.image('greenhuman', 'assets/greensquare.png');
   },
 
   create: function () {
