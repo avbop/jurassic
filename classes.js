@@ -4,7 +4,7 @@
 var Jurassic = {
   // Configuration constants.
   WORLD_WIDTH: 800,
-  WORLD_HEIGHT: 500,
+  WORLD_HEIGHT: 500
 };
 
 Jurassic.directionTo = function (start, finish) {
@@ -124,7 +124,7 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
 Jurassic.Human = function (game, x, y, colour) {
   // context, game, name, x, y, velocity, health, attack, attack %, defend %, asset key
   Jurassic.Character.call(this, game, 'Socrates', x, y, 50, 10, 10, 0.3, 0.1, colour + 'human');
-  this.scale.setTo(10/605, 10/605);
+  this.scale.setTo(5/605, 5/605);
   this.stunStrength = 70;
   this.stunEnabled = true;
 }

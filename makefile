@@ -1,5 +1,5 @@
 HTML=index.html
-JS=game.js init.js level.js
+JS=game.js init.js classes.js
 CSS=style.css
 ASSETS=$(wildcard assets/*)
 SRCS=$(HTML) $(JS) $(CSS) $(ASSETS)
