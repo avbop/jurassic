@@ -39,7 +39,7 @@ Jurassic.Character = function (game, name, x, y, velocity, health, attack, attac
   this.name = name; // User-displayable name.
   // Battle characteristics.
   this.health = health; // Hit points.
-  this.attack = attack; // Damage per attack.
+  this.attackStrength = attack; // Damage per attack.
   this.attackPercent = attackPercent; // Percentage of attacks that land.
   this.defendPercent = defendPercent; // Percentage of enemies' attacks that land.
   this.stunned = false; // Is not stunned.
@@ -88,7 +88,7 @@ Jurassic.Character.prototype.increaseDefendPercent = function () {
 Jurassic.Character.prototype.fight = function (enemy) {
   if (Math.random() < this.attackPercent && Math.random() > enemy.defendPercent) {
     // Successful attack.
-    enemy.damage(this.attack);
+    enemy.damage(this.attackStrength);
     this.increaseAttackPercent();
     return true;
   } else {
@@ -102,7 +102,7 @@ Jurassic.Character.prototype.stun = function () {
 };
 
 Jurassic.Dinosaur = function (game, x, y, colour) {
-  // context, game, name, x, y, velocity, health, attack, attack %, defend %, asset key
+  // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
   Jurassic.Character.call(this, game, '*-saurus', x, y, 100, 100, 5, 0.3, 0.3, colour + 'dino');
   this.scale.setTo(7/255, 7/255);
   this.stunnable = true;
@@ -122,7 +122,7 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
 };
 
 Jurassic.Human = function (game, x, y, colour) {
-  // context, game, name, x, y, velocity, health, attack, attack %, defend %, asset key
+  // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
   Jurassic.Character.call(this, game, 'Socrates', x, y, 50, 10, 10, 0.3, 0.1, colour + 'human');
   this.scale.setTo(5/605, 5/605);
   this.stunStrength = 70;
