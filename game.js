@@ -26,17 +26,11 @@ Jurassic.Game.prototype = {
     this.groups.dinos = this.add.group();
     this.groups.humans = this.add.group();
 
-    var rex = new Jurassic.Dinosaur(this, this.world.centerX, this.world.centerY, 'red');
-    //var fido = new Jurassic.Dinosaur(this, 100, 200, 100, 'green');
-    this.groups.dinos.add(rex);
-    //this.groups.dinos.add(fido);
-
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 200; i++) {
       var owen = new Jurassic.Human(this, this.world.randomX, this.world.randomY, 'green');
       this.groups.humans.add(owen);
-      owen.setTarget(rex);
-      owen.max_velocity = 200;
-      //owen.stunEnabled = false;
+      owen.max_velocity = 150;
+      owen.stunEnabled = false;
     }
 
     this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
@@ -48,6 +42,14 @@ Jurassic.Game.prototype = {
     this.physics.arcade.collide(this.groups.dinos, this.groups.dinos);
     this.physics.arcade.collide(this.groups.humans, this.groups.humans);
     this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
+    if (this.groups.dinos.countLiving() <= 0) {
+      var rex = new Jurassic.Dinosaur(this, this.world.randomX, this.world.randomY, 'red');
+      rex.attackStrength = 2 * (this.score / 1000);
+      this.groups.dinos.add(rex);
+      this.groups.humans.forEachAlive(function (human) {
+        human.setTarget(this);
+      }, rex);
+    }
   },
 
   fight: function (human, dino) {

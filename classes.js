@@ -9,7 +9,7 @@ var Jurassic = {
 
 Jurassic.directionTo = function (start, finish) {
   var ret = 0;
-  if (start.x > 0 && start.y > 0 && finish.x > 0 && finish.y > 0) {
+  if (start.x >= 0 && start.y >= 0 && finish.x >= 0 && finish.y >= 0) {
     var dy = finish.y - start.y;
     var dx = finish.x - start.x;
     var dtheta = Math.atan(dy/dx);
@@ -140,7 +140,7 @@ Jurassic.Human.prototype.fight = function (enemy) {
         enemy.damage(Math.floor(this.stunStrength/20));
       }
     } else {
-      enemy.damage(this.attack);
+      enemy.damage(this.attackStrength);
     }
     this.increaseAttackPercent();
     return true;
