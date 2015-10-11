@@ -17,19 +17,24 @@ Jurassic.Game.prototype = {
     this.fpsText.fixedToCamera = true; */
 
     this.stage.disableVisibilityChange = false; // Pause when out of focus.
-
-    this.physics.startSystem(Phaser.Physics.P2JS);
-
+    this.world.setBounds(0, 0, Jurassic.WORLD_WIDTH, Jurassic.WORLD_HEIGHT);
+    this.physics.startSystem(Phaser.Physics.ARCADE);
     this.cursors = this.input.keyboard.createCursorKeys();
 
     this.groups.dinos = this.add.group();
-    var rex = new Jurassic.Dinosaur(this, 100, 100, 10, 'red');
-    var fido = new Jurassic.Dinosaur(this, 300, 100, 100, 'green');
-    console.log(rex);
+    var rex = new Jurassic.Dinosaur(this, 100, 100, 50, 'red');
+    var fido = new Jurassic.Dinosaur(this, 200, 100, 100, 'green');
+    /*fido.defaultMove = function () {
+      this.direction = -Math.PI/2;
+      this.velocity = 0;
+    };*/
     this.groups.dinos.add(rex);
     this.groups.dinos.add(fido);
     this.dinos.push(rex);
     this.dinos.push(fido);
+
+    var dude = new Jurassic.Human(this, 10, 10, 50, 'green');
+    this.add.existing(dude);
   },
 
   update: function () {
