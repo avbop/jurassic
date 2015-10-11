@@ -104,7 +104,7 @@ Jurassic.Character.prototype.stun = function () {
 Jurassic.Dinosaur = function (game, x, y, colour) {
   // context, game, name, x, y, velocity, health, attack, attack %, defend %, asset key
   Jurassic.Character.call(this, game, '*-saurus', x, y, 100, 100, 5, 0.3, 0.3, colour + 'dino');
-  this.scale.setTo(10/255, 10/255);
+  this.scale.setTo(7/255, 7/255);
   this.stunnable = true;
   this.prizeStunned = 1000000;
   this.prizeKilled = 1000;
