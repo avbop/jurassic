@@ -23,10 +23,6 @@ Jurassic.directionTo = function (start, finish) {
       ret = dtheta;
     }
   }
-  // Normalise to positive angles.
-  if (ret < 0) {
-    ret += 2 * Math.PI;
-  }
   // Normalise to 0 <= ret < 2π.
   return ret % (2 * Math.PI);
 };
@@ -62,10 +58,15 @@ Jurassic.Character.prototype.move = function () {
     this.target = null;
   }
   if (this.target) {
-    var theta = Jurassic.directionTo(this, this.target);
-    // theta is normalised to 0 <= theta < 2π.
-    dthetaPositive = this.direction - theta;
-    dthetaNegative = theta - this.direction;
+    var theta0 = Jurassic.directionTo(this, this.target);
+    var theta = theta0;
+    // Calculate the "nearest" theta.
+    for (var i = -1; i <= 1; i++) {
+      var theta1 = theta0 + i * 2 * Math.PI;
+      if (Math.abs(theta1 - this.direction) < Math.abs(theta - this.direction)) {
+        theta = theta1;
+      }
+    }
     if (this.direction - theta > this.maxTurn) {
       this.direction -= this.maxTurn;
     } else if (theta - this.direction > this.maxTurn) {
@@ -130,9 +131,9 @@ Jurassic.Dinosaur.prototype.constructor = Jurassic.Dinosaur;
 Jurassic.Dinosaur.prototype.defaultMove = function () {
   var rand = Math.random();
   if (rand < .1) {
-    this.direction += Math.PI / 4;
+    this.direction += Math.PI / 10;
   } else if (rand < .2) {
-    this.direction -= Math.PI / 4;
+    this.direction -= Math.PI / 10;
   }
   this.velocity = this.maxVelocity;
 };
