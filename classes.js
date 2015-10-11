@@ -28,7 +28,7 @@ Jurassic.directionTo = function (start, finish) {
 
 Jurassic.Character = function (game, x, y, velocity, assetkey) {
   Phaser.Sprite.call(this, game, x, y, assetkey);
-  game.physics.arcade.enable(this);
+  game.physics.p2.enable(this);
   this.body.collideWorldBounds = true;
   this.max_velocity = velocity;
   this.velocity = 0;
@@ -62,8 +62,8 @@ Jurassic.Character.prototype.setTarget = function (target) {
 Jurassic.Dinosaur = function (game, x, y, velocity, colour) {
   Jurassic.Character.call(this, game, x, y, velocity, colour + 'dino');
   this.scale.setTo(10/255, 10/255);
-  /*this.body.setCircle(5);
-  this.body.collideWorldBounds = true;*/
+  this.body.setCircle(5);
+  this.body.collideWorldBounds = true;
 }
 Jurassic.Dinosaur.prototype = Object.create(Jurassic.Character.prototype);
 Jurassic.Dinosaur.prototype.constructor = Jurassic.Dinosaur;
