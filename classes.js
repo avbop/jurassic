@@ -13,9 +13,9 @@ Jurassic.directionTo = function (start, finish) {
     var dy = finish.y - start.y;
     var dx = finish.x - start.x;
     var dtheta = Math.atan(dy/dx);
-    if (dy > 0 && dx > 0) {
+    if (dy >= 0 && dx > 0) {
       ret = dtheta;
-    } else if (dy > 0 && dx < 0) {
+    } else if (dy >= 0 && dx < 0) {
       ret = Math.PI + dtheta;
     } else if (dy < 0 && dx < 0) {
       ret = Math.PI + dtheta;
@@ -26,7 +26,7 @@ Jurassic.directionTo = function (start, finish) {
   return ret;
 };
 
-Jurassic.Character = function (game, x, y, velocity, assetkey) {
+Jurassic.Character = function (game, name, x, y, velocity, health, attack, attackPercent, defendPercent, assetkey) {
   Phaser.Sprite.call(this, game, x, y, assetkey);
   game.physics.arcade.enable(this);
   this.body.collideWorldBounds = true;
@@ -34,15 +34,29 @@ Jurassic.Character = function (game, x, y, velocity, assetkey) {
   this.velocity = 0;
   this.direction = 0;
   this.target = null;
+  this.targetable = true; // Can be a target of another Character.
   this.id = Jurassic.Character.idcounter++;
+  this.name = name; // User-displayable name.
+  // Battle characteristics.
+  this.health = health; // Hit points.
+  this.attack = attack; // Damage per attack.
+  this.attackPercent = attackPercent; // Percentage of attacks that land.
+  this.defendPercent = defendPercent; // Percentage of enemies' attacks that land.
 };
 Jurassic.Character.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Character.prototype.constructor = Jurassic.Character;
 Jurassic.Character.idcounter = 0;
 Jurassic.Character.prototype.update = function () {
-  this.move();
+  if (this.alive) {
+    this.move();
+  } else {
+    this.velocity = 0;
+  }
 };
 Jurassic.Character.prototype.move = function () {
+  if (this.target && !this.target.targetable) {
+    this.target = null;
+  }
   if (this.target) {
     this.direction = Jurassic.directionTo(this, this.target);
     this.velocity = this.max_velocity;
@@ -58,12 +72,35 @@ Jurassic.Character.prototype.defaultMove = function () {
 Jurassic.Character.prototype.setTarget = function (target) {
   this.target = target;
 };
+Jurassic.Character.prototype.damage = function (amount) {
+  this.health -= amount;
+  if (this.health <= 0) {
+    this.targetable = false;
+    this.destroy();
+  }
+};
+Jurassic.Character.prototype.increaseAttackPercent = function () {
+  this.attackPercent += 0.01 * (1 - this.attackPercent);
+};
+Jurassic.Character.prototype.increaseDefendPercent = function () {
+  this.defendPercent += 0.01 * (1 - this.defendPercent);
+};
+Jurassic.Character.prototype.fight = function (enemy) {
+  if (Math.random() < this.attackPercent && Math.random() > enemy.defendPercent) {
+    // Successful attack.
+    enemy.damage(this.attack);
+    this.increaseAttackPercent();
+    return true;
+  } else {
+    enemy.increaseDefendPercent();
+    return false;
+  }
+};
 
-Jurassic.Dinosaur = function (game, x, y, velocity, colour) {
-  Jurassic.Character.call(this, game, x, y, velocity, colour + 'dino');
+Jurassic.Dinosaur = function (game, x, y, colour) {
+  // context, game, name, x, y, velocity, health, attack, attack %, defend %, asset key
+  Jurassic.Character.call(this, game, '*-saurus', x, y, 100, 100, 5, 0.3, 0.3, colour + 'dino');
   this.scale.setTo(10/255, 10/255);
-  /*this.body.setCircle(5);
-  this.body.collideWorldBounds = true;*/
 }
 Jurassic.Dinosaur.prototype = Object.create(Jurassic.Character.prototype);
 Jurassic.Dinosaur.prototype.constructor = Jurassic.Dinosaur;
@@ -77,8 +114,9 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
   this.velocity = this.max_velocity;
 };
 
-Jurassic.Human = function (game, x, y, velocity, colour) {
-  Jurassic.Character.call(this, game, x, y, velocity, colour + 'human');
+Jurassic.Human = function (game, x, y, colour) {
+  // context, game, name, x, y, velocity, health, attack, attack %, defend %, asset key
+  Jurassic.Character.call(this, game, 'Socrates', x, y, 50, 10, 10, 0.3, 0.1, colour + 'human');
   this.scale.setTo(10/605, 10/605);
 }
 Jurassic.Human.prototype = Object.create(Jurassic.Character.prototype);

@@ -4,9 +4,9 @@
 
 Jurassic.Game = function (game) {
   this.groups = {
-    dinos: null
+    dinos: null,
+    humans: null
   };
-  this.dinos = [];
 };
 
 Jurassic.Game.prototype = {
@@ -22,23 +22,31 @@ Jurassic.Game.prototype = {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     this.groups.dinos = this.add.group();
-    var rex = new Jurassic.Dinosaur(this, 100, 100, 50, 'red');
-    var fido = new Jurassic.Dinosaur(this, 200, 100, 100, 'green');
-    /*fido.defaultMove = function () {
-      this.direction = -Math.PI/2;
-      this.velocity = 0;
-    };*/
-    this.groups.dinos.add(rex);
-    this.groups.dinos.add(fido);
-    this.dinos.push(rex);
-    this.dinos.push(fido);
+    this.groups.humans = this.add.group();
 
-    var dude = new Jurassic.Human(this, 10, 10, 50, 'green');
-    this.add.existing(dude);
+    var rex = new Jurassic.Dinosaur(this, this.world.centerX, this.world.centerY, 'red');
+    //var fido = new Jurassic.Dinosaur(this, 100, 200, 100, 'green');
+    this.groups.dinos.add(rex);
+    //this.groups.dinos.add(fido);
+
+    for (var i = 0; i < 10; i++) {
+      var owen = new Jurassic.Human(this, this.world.randomX, this.world.randomY, 'green');
+      this.groups.humans.add(owen);
+      owen.setTarget(rex);
+      owen.max_velocity = 200;
+    }
   },
 
   update: function () {
     // [FPS] this.fpsText.setText(this.time.fps || '--');
-    this.dinos[0].setTarget(this.dinos[1]);
+    this.physics.arcade.collide(this.groups.dinos, this.groups.dinos);
+    this.physics.arcade.collide(this.groups.humans, this.groups.humans);
+    this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
+  },
+
+  fight: function (human, dino) {
+    dino.fight(human);
+    human.fight(dino);
+    console.log(dino.health, dino.attackPercent, dino.defendPercent);
   }
 };
