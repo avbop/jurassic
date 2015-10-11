@@ -7,6 +7,8 @@ Jurassic.Game = function (game) {
     dinos: null,
     humans: null
   };
+  this.score = 0;
+  this.scoreText = null;
 };
 
 Jurassic.Game.prototype = {
@@ -34,7 +36,11 @@ Jurassic.Game.prototype = {
       this.groups.humans.add(owen);
       owen.setTarget(rex);
       owen.max_velocity = 200;
+      //owen.stunEnabled = false;
     }
+
+    this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
+    this.modScore(0); // Set starting score.
   },
 
   update: function () {
@@ -47,6 +53,21 @@ Jurassic.Game.prototype = {
   fight: function (human, dino) {
     dino.fight(human);
     human.fight(dino);
-    console.log(dino.health, dino.attackPercent, dino.defendPercent);
+    if (!dino.alive) {
+      this.modScore(dino.prizeKilled);
+      dino.destroy();
+    } else if (dino.stunned) {
+      this.modScore(dino.prizeStunned);
+      dino.destroy();
+    }
+  },
+
+  modScore: function (delta) {
+    // Do all score changes here.
+    this.score += delta;
+    if (this.score < 0) {
+      this.score = 0;
+    }
+    this.scoreText.setText('$' + Math.floor(this.score));
   }
 };
