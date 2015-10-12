@@ -21,6 +21,8 @@ Jurassic.Game = function (game) {
   };
   this.score = 0;
   this.scoreText = null;
+  this.dinosLost = 0;
+  this.humansLost = 0;
 };
 
 Jurassic.Game.prototype = {
@@ -92,7 +94,7 @@ Jurassic.Game.prototype = {
     this.physics.arcade.collide(this.groups.gates, this.groups.dinos, this.dinoOnGate, this.testGate, this);
     this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
     this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
-    if (this.groups.dinos.countLiving() <= 0 && Math.random() < 0.008) {
+    if (this.groups.dinos.countLiving() <= this.dinosLost / 10 && Math.random() < 0.007) {
       var rex = new Jurassic.Dinosaur(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY, 'red');
       rex.attackStrength = 2 * (this.score / 1000);
       rex.setPrey(this.groups.buildings.children[0]);
@@ -107,11 +109,17 @@ Jurassic.Game.prototype = {
     dino.fight(human);
     human.fight(dino);
     if (!dino.alive) {
+      this.dinosLost++;
       this.modScore(dino.prizeKilled);
       dino.destroy();
     } else if (dino.stunned) {
+      this.dinosLost++;
       this.modScore(dino.prizeStunned);
       dino.destroy();
+    }
+    if (!human.alive) {
+      this.humansLost++;
+      human.destroy();
     }
   },
 

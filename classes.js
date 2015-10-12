@@ -65,6 +65,9 @@ Jurassic.Character.prototype.move = function () {
   if (this.target && !this.target.targetable) {
     this.target = null;
   }
+  if (this.prey && !this.prey.targetable) {
+    this.prey = null;
+  }
   if (this.target) {
     var theta0 = Jurassic.directionTo(this, this.target);
     var theta = theta0;
