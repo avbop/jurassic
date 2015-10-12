@@ -1,10 +1,19 @@
 "use strict";
 
+Jurassic.randomInt = function (min, max) {
+  // https://stackoverflow.com/questions/1527803/generating-random-numbers-in-javascript-in-a-specific-range
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 Jurassic.directionTo = function (start, finish) {
+  var x0 = start.x - start.offsetX + start.width / 2;
+  var y0 = start.y - start.offsetY + start.height / 2;
+  var x1 = finish.x - finish.offsetX + finish.width / 2;
+  var y1 = finish.y - finish.offsetY + finish.height / 2;
   var ret = 0;
-  if (start.x >= 0 && start.y >= 0 && finish.x >= 0 && finish.y >= 0) {
-    var dy = finish.y - start.y;
-    var dx = finish.x - start.x;
+  if (x0 >= 0 && y0 >= 0 && x1 >= 0 && y1 >= 0) {
+    var dy = y1 - y0;
+    var dx = x1 - x0;
     var dtheta = Math.atan(dy/dx);
     if (dy >= 0 && dx > 0) {
       ret = dtheta;
@@ -22,13 +31,16 @@ Jurassic.directionTo = function (start, finish) {
 
 Jurassic.Character = function (game, name, x, y, velocity, health, attack, attackPercent, defendPercent, assetkey) {
   Phaser.Sprite.call(this, game, x, y, assetkey);
+  this.anchor.set(0.5, 0.5);
   game.physics.arcade.enable(this);
   this.body.collideWorldBounds = true;
+  this.body.gravity.y = 0;
   this.maxVelocity = velocity;
   this.maxTurn = 5 * Math.PI / 180;
   this.velocity = 0;
   this.direction = 0;
   this.target = null;
+  this.prey = null;
   this.targetable = true; // Can be a target of another Character.
   this.id = Jurassic.Character.idcounter++;
   this.name = name; // User-displayable name.
@@ -45,6 +57,9 @@ Jurassic.Character.prototype.constructor = Jurassic.Character;
 Jurassic.Character.idcounter = 0;
 Jurassic.Character.prototype.update = function () {
   this.move();
+};
+Jurassic.Character.prototype.defaultMove = function () {
+  this.velocity = 0;
 };
 Jurassic.Character.prototype.move = function () {
   if (this.target && !this.target.targetable) {
@@ -78,11 +93,12 @@ Jurassic.Character.prototype.move = function () {
   this.body.velocity.x = this.velocity * Math.cos(this.direction);
   this.body.velocity.y = this.velocity * Math.sin(this.direction);
 };
-Jurassic.Character.prototype.defaultMove = function () {
-  this.velocity = 0;
-};
 Jurassic.Character.prototype.setTarget = function (target) {
   this.target = target;
+};
+Jurassic.Character.prototype.setPrey = function (prey) {
+  this.prey = prey;
+  this.setTarget(prey);
 };
 Jurassic.Character.prototype.damage = function (amount) {
   this.health -= amount;
@@ -133,12 +149,13 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
   this.velocity = this.maxVelocity;
 };
 
-Jurassic.Human = function (game, x, y, colour) {
+Jurassic.Human = function (game, x, y, homebase, colour) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
   Jurassic.Character.call(this, game, 'Socrates', x, y, 50, 10, 10, 0.3, 0.3, colour + 'human');
   this.scale.setTo(5/605, 5/605);
   this.stunStrength = 70;
   this.stunEnabled = true;
+  this.homebase = homebase;
 }
 Jurassic.Human.prototype = Object.create(Jurassic.Character.prototype);
 Jurassic.Human.prototype.constructor = Jurassic.Human;
@@ -161,20 +178,27 @@ Jurassic.Human.prototype.fight = function (enemy) {
     return false;
   }
 };
+/*Jurassic.Human.prototype.defaultMove = function () {
+  this.setPrey(this.homebase);
+};*/
 
 Jurassic.Building = function (game, x, y) {
   Phaser.Sprite.call(this, game, x, y, 'building');
   game.physics.arcade.enable(this);
   this.body.immovable = true;
+  this.targetable = true;
   this.scale.setTo(100/605, 100/605);
+  this.anchor.setTo(0.5, 0.5);
 };
 Jurassic.Building.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Building.prototype.constructor = Jurassic.Building;
 
 Jurassic.Gate = function (game, x, y) {
   Phaser.Sprite.call(this, game, x, y, 'gate');
+  this.anchor.setTo(0.5, 0);
   game.physics.arcade.enable(this);
   this.body.immovable = true;
+  this.targetable = true;
   var openAnim = this.animations.add('open', [0], 10, false);
   openAnim.onComplete.add(function () {
     this.isOpen = true;
@@ -196,10 +220,12 @@ Jurassic.Gate.prototype.open = function () {
   this.animations.play('open');
 };
 
-Jurassic.Fence = function (game, x, y, height) {
+Jurassic.Fence = function (game, x, y, height, gate) {
   Phaser.TileSprite.call(this, game, x, y, 10, height, 'fence');
   game.physics.arcade.enable(this);
   this.body.immovable = true;
+  this.anchor.setTo(0.5, 0);
+  this.gate = gate;
 };
 Jurassic.Fence.prototype = Object.create(Phaser.TileSprite.prototype);
 Jurassic.Fence.prototype.constructor = Jurassic.Fence;
