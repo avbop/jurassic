@@ -6,7 +6,7 @@ var Jurassic = {
   WORLD_WIDTH: 800,
   WORLD_HEIGHT: 400,
   BORDER: 250,
-  GATE_DELAY: 3 * Phaser.Timer.SECOND
+  GATE_DELAY: 2 * Phaser.Timer.SECOND
 };
 
 // The Game state.
@@ -68,12 +68,8 @@ Jurassic.Game.prototype = {
     this.groups.humans.add(dude);
     dude.maxVelocity = 50;
     dude.attackStrength = 10;
-    dude.defendPercent = 1;
+    dude.defendPercent = 0.8;
     dude.stunEnabled = false;
-    dude.defaultMove = function () {
-      this.direction = Math.PI / 2;
-      this.velocity = this.maxVelocity;
-    };
 
     var rex = new Jurassic.Dinosaur(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY, 'red');
     rex.attackStrength = 2 * (this.score / 1000);
@@ -96,7 +92,7 @@ Jurassic.Game.prototype = {
     this.physics.arcade.collide(this.groups.gates, this.groups.dinos, this.dinoOnGate, this.testGate, this);
     this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
     this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
-    /*if (this.groups.dinos.countLiving() <= 0) {
+    if (this.groups.dinos.countLiving() <= 0 && Math.random() < 0.008) {
       var rex = new Jurassic.Dinosaur(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY, 'red');
       rex.attackStrength = 2 * (this.score / 1000);
       rex.setPrey(this.groups.buildings.children[0]);
@@ -104,11 +100,7 @@ Jurassic.Game.prototype = {
       this.groups.humans.forEachAlive(function (human) {
         human.setPrey(this);
       }, rex);
-    }*/
-    this.groups.humans.forEach(function (dude) {
-      if (dude.target) console.log('target', dude.x, dude.y, dude.target.x, dude.target.y);
-      if (dude.prey) console.log('prey', dude.x, dude.y, dude.prey.x, dude.prey.y);
-    }, this);
+    }
   },
 
   fight: function (human, dino) {
@@ -116,7 +108,6 @@ Jurassic.Game.prototype = {
     human.fight(dino);
     if (!dino.alive) {
       this.modScore(dino.prizeKilled);
-      console.log('goodbye dino');
       dino.destroy();
     } else if (dino.stunned) {
       this.modScore(dino.prizeStunned);

@@ -178,9 +178,9 @@ Jurassic.Human.prototype.fight = function (enemy) {
     return false;
   }
 };
-/*Jurassic.Human.prototype.defaultMove = function () {
+Jurassic.Human.prototype.defaultMove = function () {
   this.setPrey(this.homebase);
-};*/
+};
 
 Jurassic.Building = function (game, x, y) {
   Phaser.Sprite.call(this, game, x, y, 'building');
