@@ -35,18 +35,22 @@ Jurassic.Game.prototype = {
     this.groups.humans = this.add.group();
     this.groups.buildings = this.add.group();
 
-    for (var i = 0; i < 200; i++) {
+    /*for (var i = 0; i < 200; i++) {
       var owen = new Jurassic.Human(this, this.world.randomX, this.world.randomY, 'green');
       this.groups.humans.add(owen);
       owen.maxVelocity = 150;
       owen.stunEnabled = false;
-    }
+    }*/
 
     var office = new Jurassic.Building(this, 100, 100);
     this.groups.buildings.add(office);
 
     var dude = new Jurassic.Human(this, 150, 10, 'green');
     this.groups.humans.add(dude);
+    dude.maxVelocity = 200;
+    dude.health = 1000000;
+    dude.attackStrength = 1000;
+    dude.stunEnabled = false;
     dude.defaultMove = function () {
       this.direction = Math.PI / 2;
       this.velocity = this.maxVelocity;
