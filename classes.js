@@ -170,3 +170,36 @@ Jurassic.Building = function (game, x, y) {
 };
 Jurassic.Building.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Building.prototype.constructor = Jurassic.Building;
+
+Jurassic.Gate = function (game, x, y) {
+  Phaser.Sprite.call(this, game, x, y, 'gate');
+  game.physics.arcade.enable(this);
+  this.body.immovable = true;
+  var openAnim = this.animations.add('open', [0], 10, false);
+  openAnim.onComplete.add(function () {
+    this.isOpen = true;
+    this.game.time.events.add(Jurassic.GATE_DELAY, this.close, this);
+  }, this);
+  var closeAnim = this.animations.add('close', [1], 10, false);
+  closeAnim.onComplete.add(function () {
+    this.isOpen = false;
+  }, this);
+  this.isOpen = true;
+  this.close();
+};
+Jurassic.Gate.prototype = Object.create(Phaser.Sprite.prototype);
+Jurassic.Gate.prototype.constructor = Jurassic.Gate;
+Jurassic.Gate.prototype.close = function () {
+  this.animations.play('close');
+};
+Jurassic.Gate.prototype.open = function () {
+  this.animations.play('open');
+};
+
+Jurassic.Fence = function (game, x, y, height) {
+  Phaser.TileSprite.call(this, game, x, y, 10, height, 'fence');
+  game.physics.arcade.enable(this);
+  this.body.immovable = true;
+};
+Jurassic.Fence.prototype = Object.create(Phaser.TileSprite.prototype);
+Jurassic.Fence.prototype.constructor = Jurassic.Fence;
