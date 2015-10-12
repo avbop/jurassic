@@ -137,20 +137,20 @@ Jurassic.Game.prototype = {
     gate.open();
   },
 
-  testGate: function (gate, char) {
-    if (gate.isOpen && char.prey) {
-      char.setTarget(char.prey);
+  testGate: function (gate, character) {
+    if (gate.isOpen && character.prey) {
+      character.setTarget(character.prey);
     }
     return !gate.isOpen;
   },
 
-  onFence: function (fence, char) {
-    char.setTarget(fence.gate);
+  onFence: function (fence, character) {
+    character.setTarget(fence.gate);
   },
 
   dinoOnGate: function (gate, dino) {
     /*if (dino.prey) {
       dino.setTarget(dino.prey);
     }*/
-  },
+  }
 };
