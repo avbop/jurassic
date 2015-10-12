@@ -4,7 +4,7 @@
 var Jurassic = {
   // Configuration constants.
   WORLD_WIDTH: 800,
-  WORLD_HEIGHT: 500
+  WORLD_HEIGHT: 400
 };
 
 // The Game state.
@@ -13,7 +13,9 @@ Jurassic.Game = function (game) {
   this.groups = {
     dinos: null,
     humans: null,
-    buildings: null
+    buildings: null,
+    gates: null,
+    fences: null
   };
   this.score = 0;
   this.scoreText = null;
@@ -31,6 +33,10 @@ Jurassic.Game.prototype = {
     this.physics.startSystem(Phaser.Physics.ARCADE);
     this.cursors = this.input.keyboard.createCursorKeys();
 
+    var bg = this.add.sprite(0, 0, 'bg');
+
+    this.groups.gates = this.add.group();
+    this.groups.fences = this.add.group();
     this.groups.dinos = this.add.group();
     this.groups.humans = this.add.group();
     this.groups.buildings = this.add.group();
