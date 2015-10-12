@@ -10,3 +10,9 @@ h1 {
 canvas {
   margin: auto;
 }
+
+#info {
+  margin: auto;
+  width: 40%;
+  text-align: center;
+}

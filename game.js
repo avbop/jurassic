@@ -42,6 +42,12 @@ Jurassic.Game.prototype = {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     var bg = this.add.sprite(0, 0, 'bg');
+    bg.inputEnabled = true;
+    bg.events.onInputDown.add(function (sprite, ptr) {
+      this.selectedDino = null;
+      this.selectedBarracks = null;
+      this.selectedHuman = null;
+    }, this);
 
     this.groups.fences = this.add.group();
     this.groups.gates = this.add.group();
@@ -105,13 +111,14 @@ Jurassic.Game.prototype = {
     this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
     this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
     if (this.groups.dinos.countLiving() <= this.dinosLost / 10 && Math.random() < 0.007) {
-      var rex = new Jurassic.Dinosaur(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY, 'red');
-      rex.attackStrength = 2 * (this.score / 1000);
+      var rex = new Jurassic.Dinosaur(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY, 'red', 2 * this.score / 1000 + 1000);
+      rex.attackStrength = 2 * this.score / 1000;
       rex.setPrey(this.groups.buildings.children[0]);
       rex.inputEnabled = true;
       rex.events.onInputDown.add(this.dinoClick, this);
       this.groups.dinos.add(rex);
     }
+    this.updateUI();
   },
 
   fight: function (human, dino) {
@@ -163,12 +170,10 @@ Jurassic.Game.prototype = {
 
   humanClick: function (human, ptr) {
     this.selectedHuman = human;
-    this.updateUI();
   },
 
   dinoClick: function (dino, ptr) {
     this.selectedDino = dino;
-    this.updateUI();
   },
 
   barracksClick: function (barracks, ptr) {
@@ -180,7 +185,6 @@ Jurassic.Game.prototype = {
       }, this);
     }
     this.selectedBarracks = barracks;
-    this.updateUI();
   },
 
   updateUI: function () {
@@ -210,15 +214,20 @@ Jurassic.Game.prototype = {
       this.selectedHuman = null;
       this.selectedBarracks = null;
     }
-    var infoDiv = document.getElementById(Jurassic.INFO_UI_ID);
+    var infoText = '';
     if (this.selectedDino) {
-      infoDiv.innerHTML = this.selectedDino.name;
+      infoText = this.selectedDino.name;
+      infoText += ' (' + Math.round(this.selectedDino.health / this.selectedDino.fullHealth) * 100 + '%)';
     } else if (this.selectedHuman) {
-      infoDiv.innerHTML = this.selectedHuman.name;
+      infoText = this.selectedHuman.name;
+      infoText += ' - ';
+      infoText += this.selectedHuman.description;
+      infoText += ' (' + Math.round(this.selectedHuman.health / this.selectedHuman.fullHealth) * 100 + '%)';
     } else if (this.selectedBarracks) {
-      infoDiv.innerHTML = this.selectedBarracks.name;
+      infoText = this.selectedBarracks.name;
     } else {
-      infoDiv.innerHTML = '<>';
+      infoText = 'Click something to select it.';
     }
+    document.getElementById(Jurassic.INFO_UI_ID).innerHTML = infoText;
   }
 };

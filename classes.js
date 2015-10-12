@@ -45,6 +45,7 @@ Jurassic.Character = function (game, name, x, y, velocity, health, attack, attac
   this.id = Jurassic.Character.idcounter++;
   this.name = name; // User-displayable name.
   // Battle characteristics.
+  this.fullHealth = health; // Starting hit points.
   this.health = health; // Hit points.
   this.attackStrength = attack; // Damage per attack.
   this.attackPercent = attackPercent; // Percentage of attacks that land.
@@ -126,9 +127,9 @@ Jurassic.Character.prototype.fight = function (enemy) {
   }
 };
 
-Jurassic.Dinosaur = function (game, x, y, colour) {
+Jurassic.Dinosaur = function (game, x, y, colour, health) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
-  Jurassic.Character.call(this, game, '*-saurus', x, y, 100, 100, 5, 0.3, 0.3, colour + 'dino');
+  Jurassic.Character.call(this, game, '*-saurus', x, y, 100, health, 5, 0.3, 0.3, colour + 'dino');
   this.scale.setTo(10/255, 10/255);
   this.prize = 1000;
 }
