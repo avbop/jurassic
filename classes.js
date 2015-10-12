@@ -1,12 +1,5 @@
 "use strict";
 
-// Namespace for the game.
-var Jurassic = {
-  // Configuration constants.
-  WORLD_WIDTH: 800,
-  WORLD_HEIGHT: 500
-};
-
 Jurassic.directionTo = function (start, finish) {
   var ret = 0;
   if (start.x >= 0 && start.y >= 0 && finish.x >= 0 && finish.y >= 0) {
@@ -23,7 +16,7 @@ Jurassic.directionTo = function (start, finish) {
       ret = dtheta;
     }
   }
-  // Normalise to 0 <= ret < 2π.
+  // Normalise to -2π <= ret < 2π.
   return ret % (2 * Math.PI);
 };
 
@@ -60,6 +53,8 @@ Jurassic.Character.prototype.move = function () {
   if (this.target) {
     var theta0 = Jurassic.directionTo(this, this.target);
     var theta = theta0;
+    // Normalise to -2π <= ret < 2π.
+    this.direction %= (2 * Math.PI);
     // Calculate the "nearest" theta.
     for (var i = -1; i <= 1; i++) {
       var theta1 = theta0 + i * 2 * Math.PI;
@@ -96,20 +91,20 @@ Jurassic.Character.prototype.damage = function (amount) {
     this.kill();
   }
 };
-Jurassic.Character.prototype.increaseAttackPercent = function () {
+Jurassic.Character.prototype.attackSuccess = function () {
   this.attackPercent += 0.01 * (1 - this.attackPercent);
 };
-Jurassic.Character.prototype.increaseDefendPercent = function () {
+Jurassic.Character.prototype.defendSuccess = function () {
   this.defendPercent += 0.01 * (1 - this.defendPercent);
 };
 Jurassic.Character.prototype.fight = function (enemy) {
   if (Math.random() < this.attackPercent && Math.random() > enemy.defendPercent) {
     // Successful attack.
     enemy.damage(this.attackStrength);
-    this.increaseAttackPercent();
+    this.attackSuccess();
     return true;
   } else {
-    enemy.increaseDefendPercent();
+    enemy.defendSuccess();
     return false;
   }
 };
@@ -140,7 +135,7 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
 
 Jurassic.Human = function (game, x, y, colour) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
-  Jurassic.Character.call(this, game, 'Socrates', x, y, 50, 10, 10, 0.3, 0.1, colour + 'human');
+  Jurassic.Character.call(this, game, 'Socrates', x, y, 50, 10, 10, 0.3, 0.3, colour + 'human');
   this.scale.setTo(5/605, 5/605);
   this.stunStrength = 70;
   this.stunEnabled = true;
@@ -159,10 +154,19 @@ Jurassic.Human.prototype.fight = function (enemy) {
     } else {
       enemy.damage(this.attackStrength);
     }
-    this.increaseAttackPercent();
+    this.attackSuccess();
     return true;
   } else {
-    enemy.increaseDefendPercent();
+    enemy.defendSuccess();
     return false;
   }
 };
+
+Jurassic.Building = function (game, x, y) {
+  Phaser.Sprite.call(this, game, x, y, 'building');
+  game.physics.arcade.enable(this);
+  this.body.immovable = true;
+  this.scale.setTo(100/605, 100/605);
+};
+Jurassic.Building.prototype = Object.create(Phaser.Sprite.prototype);
+Jurassic.Building.prototype.constructor = Jurassic.Building;

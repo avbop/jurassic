@@ -45,6 +45,7 @@ Jurassic.Preloader.prototype = {
     this.load.image('greendino', 'assets/greencircle.png');
     this.load.image('redhuman', 'assets/redsquare.png');
     this.load.image('greenhuman', 'assets/greensquare.png');
+    this.load.image('building', 'assets/redsquare.png');
   },
 
   create: function () {
