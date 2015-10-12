@@ -6,7 +6,7 @@ var Jurassic = {
   WORLD_WIDTH: 800,
   WORLD_HEIGHT: 400,
   BORDER: 250,
-  GATE_DELAY: 5 * Phaser.Timer.SECOND
+  GATE_DELAY: 3 * Phaser.Timer.SECOND
 };
 
 // The Game state.
