@@ -6,7 +6,8 @@ var Jurassic = {
   WORLD_WIDTH: 800,
   WORLD_HEIGHT: 400,
   BORDER: 250,
-  GATE_DELAY: 2 * Phaser.Timer.SECOND
+  GATE_DELAY: 2 * Phaser.Timer.SECOND,
+  INFO_UI_ID: 'info'
 };
 
 // The Game state.
@@ -23,6 +24,9 @@ Jurassic.Game = function (game) {
   this.scoreText = null;
   this.dinosLost = 0;
   this.humansLost = 0;
+  this.selectedHuman = null;
+  this.selectedDino = null;
+  this.selectedBarracks = null;
 };
 
 Jurassic.Game.prototype = {
@@ -63,24 +67,30 @@ Jurassic.Game.prototype = {
     var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 380, 30, gate2);
     this.groups.fences.add(fence);
 
-    var office = new Jurassic.Building(this.game, 100, 100);
-    this.groups.buildings.add(office);
+    var barracks0 = new Jurassic.Building(this.game, 100, 65, 'Barracks A');
+    barracks0.inputEnabled = true;
+    barracks0.events.onInputDown.add(this.barracksClick, this);
+    this.groups.buildings.add(barracks0);
 
-    var dude = new Jurassic.Human(this.game, 150, 10, office, 'green');
+    var barracks1 = new Jurassic.Building(this.game, 100, 365, 'Barracks B');
+    barracks1.inputEnabled = true;
+    barracks1.events.onInputDown.add(this.barracksClick, this);
+    this.groups.buildings.add(barracks1);
+
+    var dude = new Jurassic.Human(this.game, 150, 300, barracks0, 'green');
     this.groups.humans.add(dude);
-    dude.maxVelocity = 50;
-    dude.attackStrength = 10;
-    dude.defendPercent = 0.8;
-    dude.stunEnabled = false;
+    dude.inputEnabled = true;
+    dude.events.onInputDown.add(this.humanClick, this);
 
-    var rex = new Jurassic.Dinosaur(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY, 'red');
-    rex.attackStrength = 2 * (this.score / 1000);
-    rex.setPrey(this.groups.buildings.children[0]);
-    this.groups.dinos.add(rex);
-    dude.setPrey(rex);
+    var dude = new Jurassic.Human(this.game, 150, 10, barracks1, 'red');
+    this.groups.humans.add(dude);
+    dude.inputEnabled = true;
+    dude.events.onInputDown.add(this.humanClick, this);
 
     this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
     this.modScore(0); // Set starting score.
+
+    this.updateUI();
   },
 
   update: function () {
@@ -98,23 +108,21 @@ Jurassic.Game.prototype = {
       var rex = new Jurassic.Dinosaur(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY, 'red');
       rex.attackStrength = 2 * (this.score / 1000);
       rex.setPrey(this.groups.buildings.children[0]);
+      rex.inputEnabled = true;
+      rex.events.onInputDown.add(this.dinoClick, this);
       this.groups.dinos.add(rex);
-      this.groups.humans.forEachAlive(function (human) {
-        human.setPrey(this);
-      }, rex);
     }
   },
 
   fight: function (human, dino) {
     dino.fight(human);
     human.fight(dino);
+    if (!dino.alive || !human.alive) {
+      this.updateUI();
+    }
     if (!dino.alive) {
       this.dinosLost++;
-      this.modScore(dino.prizeKilled);
-      dino.destroy();
-    } else if (dino.stunned) {
-      this.dinosLost++;
-      this.modScore(dino.prizeStunned);
+      this.modScore(dino.prize);
       dino.destroy();
     }
     if (!human.alive) {
@@ -151,5 +159,66 @@ Jurassic.Game.prototype = {
     /*if (dino.prey) {
       dino.setTarget(dino.prey);
     }*/
+  },
+
+  humanClick: function (human, ptr) {
+    this.selectedHuman = human;
+    this.updateUI();
+  },
+
+  dinoClick: function (dino, ptr) {
+    this.selectedDino = dino;
+    this.updateUI();
+  },
+
+  barracksClick: function (barracks, ptr) {
+    if (this.selectedBarracks == barracks) {
+      this.groups.humans.forEach(function (human) {
+        if (human.homebase == this.selectedBarracks) {
+          human.setPrey(human.homebase);
+        }
+      }, this);
+    }
+    this.selectedBarracks = barracks;
+    this.updateUI();
+  },
+
+  updateUI: function () {
+    if (this.selectedDino && !this.selectedDino.alive) {
+      this.selectedDino = null;
+    }
+    if (this.selectedHuman && !this.selectedHuman.alive) {
+      this.selectedHuman = null;
+    }
+    if (this.selectedDino && this.selectedHuman) {
+      this.selectedHuman.setPrey(this.selectedDino);
+      this.selectedHuman = null;
+      this.selectedDino = null;
+    }
+    if (this.selectedDino && this.selectedBarracks) {
+      this.groups.humans.forEach(function (human) {
+        if (human.homebase == this.selectedBarracks) {
+          human.setPrey(this.selectedDino);
+        }
+      }, this);
+      this.selectedDino = null;
+      this.selectedBarracks = null;
+    }
+    if (this.selectedHuman && this.selectedBarracks) {
+      this.selectedHuman.homebase = this.selectedBarracks;
+      this.selectedHuman.setPrey(this.selectedBarracks);
+      this.selectedHuman = null;
+      this.selectedBarracks = null;
+    }
+    var infoDiv = document.getElementById(Jurassic.INFO_UI_ID);
+    if (this.selectedDino) {
+      infoDiv.innerHTML = this.selectedDino.name;
+    } else if (this.selectedHuman) {
+      infoDiv.innerHTML = this.selectedHuman.name;
+    } else if (this.selectedBarracks) {
+      infoDiv.innerHTML = this.selectedBarracks.name;
+    } else {
+      infoDiv.innerHTML = '<>';
+    }
   }
 };

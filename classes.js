@@ -49,8 +49,6 @@ Jurassic.Character = function (game, name, x, y, velocity, health, attack, attac
   this.attackStrength = attack; // Damage per attack.
   this.attackPercent = attackPercent; // Percentage of attacks that land.
   this.defendPercent = defendPercent; // Percentage of enemies' attacks that land.
-  this.stunned = false; // Is not stunned.
-  this.stunnable = false; // Can't be stunned.
 };
 Jurassic.Character.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Character.prototype.constructor = Jurassic.Character;
@@ -88,7 +86,7 @@ Jurassic.Character.prototype.move = function () {
       this.direction = theta;
     }
     this.velocity = this.maxVelocity;
-  } else if (this.alive && !this.stunned) {
+  } else if (this.alive) {
     this.defaultMove();
   } else {
     this.velocity = 0;
@@ -127,18 +125,12 @@ Jurassic.Character.prototype.fight = function (enemy) {
     return false;
   }
 };
-Jurassic.Character.prototype.stun = function () {
-  this.stunned = true;
-  this.targetable = false;
-};
 
 Jurassic.Dinosaur = function (game, x, y, colour) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
   Jurassic.Character.call(this, game, '*-saurus', x, y, 100, 100, 5, 0.3, 0.3, colour + 'dino');
-  this.scale.setTo(7/255, 7/255);
-  this.stunnable = true;
-  this.prizeStunned = 1000000;
-  this.prizeKilled = 1000;
+  this.scale.setTo(10/255, 10/255);
+  this.prize = 1000;
 }
 Jurassic.Dinosaur.prototype = Object.create(Jurassic.Character.prototype);
 Jurassic.Dinosaur.prototype.constructor = Jurassic.Dinosaur;
@@ -155,43 +147,24 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
 Jurassic.Human = function (game, x, y, homebase, colour) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
   Jurassic.Character.call(this, game, 'Socrates', x, y, 50, 10, 10, 0.3, 0.3, colour + 'human');
-  this.scale.setTo(5/605, 5/605);
-  this.stunStrength = 70;
-  this.stunEnabled = true;
+  this.scale.setTo(8/605, 8/605);
   this.homebase = homebase;
+  this.description = 'A rational animal.'
 }
 Jurassic.Human.prototype = Object.create(Jurassic.Character.prototype);
 Jurassic.Human.prototype.constructor = Jurassic.Human;
-Jurassic.Human.prototype.fight = function (enemy) {
-  if (Math.random() < this.attackPercent && Math.random() > enemy.defendPercent) {
-    // Successful attack.
-    if (this.stunEnabled) {
-      if (enemy.stunnable && enemy.health <= this.stunStrength) {
-        enemy.stun();
-      } else {
-        enemy.damage(Math.floor(this.stunStrength/20));
-      }
-    } else {
-      enemy.damage(this.attackStrength);
-    }
-    this.attackSuccess();
-    return true;
-  } else {
-    enemy.defendSuccess();
-    return false;
-  }
-};
 Jurassic.Human.prototype.defaultMove = function () {
   this.setPrey(this.homebase);
 };
 
-Jurassic.Building = function (game, x, y) {
+Jurassic.Building = function (game, x, y, name) {
   Phaser.Sprite.call(this, game, x, y, 'building');
   game.physics.arcade.enable(this);
   this.body.immovable = true;
   this.targetable = true;
-  this.scale.setTo(100/605, 100/605);
+  this.scale.setTo(50/605, 50/605);
   this.anchor.setTo(0.5, 0.5);
+  this.name = name
 };
 Jurassic.Building.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Building.prototype.constructor = Jurassic.Building;
