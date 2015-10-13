@@ -1,3 +1,5 @@
+"use strict";
+
 // The Boot state.
 
 Jurassic.Boot = function (game) {
@@ -67,7 +69,7 @@ Jurassic.Preloader.prototype = {
 // Initialise the game in the game div. Call this last so it loads the states first.
 (function () {
   if (localStorage.getItem('instructions')) {
-    this.document.getElementById('instructions').style.display = 'none';
+    document.getElementById('instructions').style.display = 'none';
   }
   var game = new Phaser.Game(Jurassic.WORLD_WIDTH, Jurassic.WORLD_HEIGHT, Phaser.AUTO, 'game');
 
@@ -81,5 +83,5 @@ Jurassic.Preloader.prototype = {
 // The opening instructions screen.
 function closeInstructions() {
   localStorage.setItem('instructions', true);
-  this.document.getElementById('instructions').style.display = 'none';
+  document.getElementById('instructions').style.display = 'none';
 }

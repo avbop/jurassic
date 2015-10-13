@@ -1,3 +1,5 @@
+"use strict";
+
 // Namespace for the game.
 var Jurassic = {
   // Configuration constants.
@@ -26,7 +28,9 @@ var Jurassic = {
     WHITE: 5,
     SAND: 6,
     PINK: 7
-  }
+  },
+  HUMAN_NAMES: ['Joe', 'John', 'Socrates', 'Robert', 'Steve', 'Owen', 'Malcolm', 'Rick', 'Chris', 'Victor', 'Zachary', 'Henry', 'Alan', 'Ian', 'Tim', 'Ray', 'Dennis'],
+  DOG_NAMES: ['Fido', 'Rover', 'Rex']
 };
 
 // The Game state.
@@ -164,7 +168,7 @@ Jurassic.Game.prototype = {
           var irex = Jurassic.Mutant(this.game, x, y, this.dinosLost * 100);
           irex.attackStrength = this.dinosLost * 10;
           irex.maxVelocity = this.dinosLost * 10;
-          irex.setPrey(this.groups.humans.children[Jurassic.randomInt(0, this.groups.humans.children.length)]);
+          irex.setPrey(this.groups.humans.children[Jurassic.randomInt(0, this.groups.humans.children.length - 1)]);
           this.addDino(irex);
         }
       }

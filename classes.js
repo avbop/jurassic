@@ -1,3 +1,5 @@
+"use strict";
+
 Jurassic.randomInt = function (min, max) {
   // https://stackoverflow.com/questions/1527803/generating-random-numbers-in-javascript-in-a-specific-range
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -152,8 +154,9 @@ Jurassic.Dinosaur.prototype.defendSuccess = function () {
 };
 
 Jurassic.Human = function (game, x, y, homebase, colour, health) {
+  name = Jurassic.HUMAN_NAMES[Jurassic.randomInt(0, Jurassic.HUMAN_NAMES.length - 1)];
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
-  Jurassic.Character.call(this, game, 'Socrates', x, y, 100, health, 50, 0.3, 0.3, 'human');
+  Jurassic.Character.call(this, game, name, x, y, 100, health, 50, 0.3, 0.3, 'human');
   this.homebase = homebase;
   this.description = 'A rational animal.'
   this.price = 1000;
