@@ -153,7 +153,7 @@ Jurassic.Game.prototype = {
       this.physics.arcade.collide(this.groups.gates, this.groups.dinos, null, this.testGate, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
       this.physics.arcade.overlap(this.groups.humans, this.groups.dinos, this.fight, null, this);
-      if (this.groups.dinos.countLiving() <= this.dinosLost / 10 && Math.random() < 0.004) {
+      if (this.groups.dinos.countLiving() <= this.dinosLost / 6 && Math.random() < 0.004) {
         var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width);
         var y = this.world.randomY;
         if (this.dinosLost < 5) {
