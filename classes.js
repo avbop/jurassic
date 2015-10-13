@@ -151,6 +151,8 @@ Jurassic.Human = function (game, x, y, homebase, colour, health) {
   Jurassic.Character.call(this, game, 'Socrates', x, y, 100, health, 50, 0.3, 0.3, 'human');
   this.homebase = homebase;
   this.description = 'A rational animal.'
+  this.price = 1000;
+  this.colour = colour;
   this.animations.add('unselected', [colour], 2, false);
   this.animations.add('selected', [Jurassic.HUMAN_COLOUR.RED, colour], 2, true);
   this.animations.play('unselected');
@@ -219,3 +221,21 @@ Jurassic.Fence = function (game, x, y, height, gate) {
 };
 Jurassic.Fence.prototype = Object.create(Phaser.TileSprite.prototype);
 Jurassic.Fence.prototype.constructor = Jurassic.Fence;
+
+Jurassic.Button = function (game, type, quantity) {
+  Phaser.Sprite.call(this, game, Jurassic.STORE_X, Jurassic.Button.nextY, 'human');
+  this.scale.setTo(3, 3);
+  this.anchor.setTo(0.5, 0.5);
+  var h = type(game, 0, 0, null);
+  this.frame = h.colour;
+  this.price = h.price * quantity;
+  this.description = h.description;
+  if (quantity > 1) {
+    this.description += '(' + quantity + ')';
+  }
+  Jurassic.Button.nextY += 50;
+  this.caption = null;
+}
+Jurassic.Button.nextY = 50;
+Jurassic.Button.prototype = Object.create(Phaser.Sprite.prototype);
+Jurassic.Button.prototype.constructor = Jurassic.Button;

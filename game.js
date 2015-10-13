@@ -4,6 +4,7 @@ var Jurassic = {
   WORLD_WIDTH: 800,
   WORLD_HEIGHT: 400,
   BORDER: 250,
+  STORE_X: 15,
   GATE_DELAY: 3 * Phaser.Timer.SECOND,
   INFO_UI_ID: 'info',
   HUMAN_COLOUR: {
@@ -76,6 +77,8 @@ Jurassic.Game.prototype = {
       }
     }, this);
 
+    this.addButton(Jurassic.Grunt, 10);
+
     this.groups.fences = this.add.group();
     this.groups.gates = this.add.group();
     this.groups.buildings = this.add.group();
@@ -100,18 +103,20 @@ Jurassic.Game.prototype = {
     var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 380, 30, gate2);
     this.groups.fences.add(fence);
 
-    this.addBarracks(new Jurassic.Building(this.game, 150, 50, 'Barracks A'));
-    var barracks = new Jurassic.Building(this.game, 150, 200, 'Barracks B');
-    this.addBarracks(barracks);
-    this.defaultBarracks = barracks;
-    this.addBarracks(new Jurassic.Building(this.game, 150, 350, 'Barracks C'));
+    var barracks0 = new Jurassic.Building(this.game, 150, 50, 'Barracks A');
+    this.addBarracks(barracks0);
+    var barracks1 = new Jurassic.Building(this.game, 150, 200, 'Barracks B');
+    this.addBarracks(barracks1);
+    this.defaultBarracks = barracks1;
+    var barracks2 = new Jurassic.Building(this.game, 150, 350, 'Barracks C');
+    this.addBarracks(barracks2);
 
     // Starting complement.
     for (var i = 0; i < 10; i++) {
       this.addHuman(Jurassic.Grunt(this.game, 150 + Jurassic.randomInt(-50, 50), 10, barracks0));
       this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 10, barracks0));
-      this.addHuman(Jurassic.Grunt(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks1));
-      this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks1));
+      this.addHuman(Jurassic.Grunt(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks2));
+      this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks2));
     }
 
     // Starting enemy.
@@ -146,8 +151,14 @@ Jurassic.Game.prototype = {
       this.physics.arcade.collide(this.groups.gates, this.groups.dinos, null, this.testGate, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
       this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
-      if (this.groups.dinos.countLiving() <= this.dinosLost / 5 && Math.random() < 0.004) {
-        this.addDino(Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
+      if (this.groups.dinos.countLiving() <= this.dinosLost / 10 && Math.random() < 0.003) {
+        var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width);
+        var y = this.world.randomY;
+        if (this.dinosLost < 5) {
+          this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));
+        } else if (this.dinosLost < 10) {
+          this.addDino(Jurassic.Stegosaurus(this.game, x, y));
+        }
       }
       this.groups.dinos.forEachDead(function (dino) {
         this.dinosLost++;
@@ -178,6 +189,29 @@ Jurassic.Game.prototype = {
     this.groups.buildings.add(barracks);
     barracks.inputEnabled = true;
     barracks.events.onInputDown.add(this.barracksClick, this);
+  },
+
+  addButton: function (type, quantity) {
+    var button = new Jurassic.Button(this.game, type, quantity);
+    button.inputEnabled = true;
+    button.events.onInputOver.add(function (button, ptr) {
+      if (button.caption) {
+        button.caption.destroy();
+      }
+      if (this.score >= button.price) {
+        button.caption = this.add.text(button.x + button.width + 5, button.y, button.description, { fontSize: '12px', fill: '#fff' });
+        this.add.existing(button.caption);
+      } else {
+        button.caption = this.add.text(button.x + button.width + 5, button.y, '$' + button.price, { fontSize: '12px', fill: '#fff' });
+        this.add.existing(button.caption);
+      }
+    }, this);
+    button.events.onInputOut.add(function (button, ptr) {
+      if (button.caption) {
+        button.caption.destroy();
+      }
+    }, this);
+    this.add.existing(button);
   },
 
   fight: function (human, dino) {
