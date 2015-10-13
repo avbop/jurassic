@@ -109,10 +109,10 @@ Jurassic.Character.prototype.damage = function (amount) {
   }
 };
 Jurassic.Character.prototype.attackSuccess = function () {
-  this.attackPercent += 0.01 * (1 - this.attackPercent);
+  this.attackPercent += 0.1 * (1 - this.attackPercent);
 };
 Jurassic.Character.prototype.defendSuccess = function () {
-  this.defendPercent += 0.01 * (1 - this.defendPercent);
+  this.defendPercent += 0.1 * (1 - this.defendPercent);
 };
 Jurassic.Character.prototype.fight = function (enemy) {
   if (Math.random() < this.attackPercent && Math.random() > enemy.defendPercent) {
@@ -144,6 +144,11 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
     this.direction -= Math.PI / 10;
   }
   this.velocity = this.maxVelocity;
+};
+Jurassic.Dinosaur.prototype.defendSuccess = function () {
+  if (this.defendPercent < 0.8) {
+    this.defendPercent += 0.1 * (1 - this.defendPercent);
+  }
 };
 
 Jurassic.Human = function (game, x, y, homebase, colour, health) {
@@ -226,14 +231,16 @@ Jurassic.Button = function (game, type, quantity) {
   Phaser.Sprite.call(this, game, Jurassic.STORE_X, Jurassic.Button.nextY, 'human');
   this.scale.setTo(3, 3);
   this.anchor.setTo(0.5, 0.5);
+  this.type = type;
   var h = type(game, 0, 0, null);
   this.frame = h.colour;
   this.price = h.price * quantity;
+  this.quantity = quantity;
   this.description = h.description;
   if (quantity > 1) {
-    this.description += '(' + quantity + ')';
+    this.description += ' (x' + quantity + ')';
   }
-  Jurassic.Button.nextY += 50;
+  Jurassic.Button.nextY += 30;
   this.caption = null;
 }
 Jurassic.Button.nextY = 50;

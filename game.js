@@ -77,7 +77,10 @@ Jurassic.Game.prototype = {
       }
     }, this);
 
+    this.addButton(Jurassic.Dog, 10);
     this.addButton(Jurassic.Grunt, 10);
+    this.addButton(Jurassic.Armour, 10);
+    this.addButton(Jurassic.Tank, 1);
 
     this.groups.fences = this.add.group();
     this.groups.gates = this.add.group();
@@ -144,20 +147,25 @@ Jurassic.Game.prototype = {
     if (!this.physics.arcade.isPaused) {
       this.physics.arcade.collide(this.groups.dinos, this.groups.dinos);
       this.physics.arcade.collide(this.groups.humans, this.groups.humans);
-      this.physics.arcade.collide(this.groups.buildings, this.groups.dinos);
       this.physics.arcade.overlap(this.groups.buildings, this.groups.humans, this.inBuilding, null, this);
       this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, null, this);
       this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, null, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.dinos, null, this.testGate, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
-      this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
-      if (this.groups.dinos.countLiving() <= this.dinosLost / 10 && Math.random() < 0.003) {
+      this.physics.arcade.overlap(this.groups.humans, this.groups.dinos, this.fight, null, this);
+      if (this.groups.dinos.countLiving() <= this.dinosLost / 10 && Math.random() < 0.004) {
         var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width);
         var y = this.world.randomY;
         if (this.dinosLost < 5) {
           this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));
         } else if (this.dinosLost < 10) {
           this.addDino(Jurassic.Stegosaurus(this.game, x, y));
+        } else {
+          var irex = Jurassic.Mutant(this.game, x, y, this.dinosLost * 100);
+          irex.attackStrength = this.dinosLost * 10;
+          irex.maxVelocity = this.dinosLost * 10;
+          irex.setPrey(this.groups.humans.children[Jurassic.randomInt(0, this.groups.humans.children.length)]);
+          this.addDino(irex);
         }
       }
       this.groups.dinos.forEachDead(function (dino) {
@@ -195,20 +203,33 @@ Jurassic.Game.prototype = {
     var button = new Jurassic.Button(this.game, type, quantity);
     button.inputEnabled = true;
     button.events.onInputOver.add(function (button, ptr) {
-      if (button.caption) {
+      /*if (button.caption) {
         button.caption.destroy();
-      }
+      }*/
       if (this.score >= button.price) {
-        button.caption = this.add.text(button.x + button.width + 5, button.y, button.description, { fontSize: '12px', fill: '#fff' });
+        button.caption = this.add.text(button.x, button.y, button.description, { fontSize: '12px', fill: '#fff' });
+        button.caption.anchor.setTo(0, 0.5);
         this.add.existing(button.caption);
       } else {
-        button.caption = this.add.text(button.x + button.width + 5, button.y, '$' + button.price, { fontSize: '12px', fill: '#fff' });
+        button.caption = this.add.text(button.x, button.y, '$' + button.price, { fontSize: '12px', fill: '#fff' });
+        button.caption.anchor.setTo(0, 0.5);
         this.add.existing(button.caption);
       }
     }, this);
     button.events.onInputOut.add(function (button, ptr) {
       if (button.caption) {
         button.caption.destroy();
+      }
+    }, this);
+    button.events.onInputDown.add(function (button, ptr) {
+      if (button.caption) {
+        button.caption.destroy();
+      }
+      if (button.price <= this.score) {
+        this.modScore(-button.price);
+        for (var i = 0; i < button.quantity; i++) {
+          this.addHuman(button.type(this.game, this.defaultBarracks.x + Jurassic.randomInt(-20, 20), this.defaultBarracks.y + Jurassic.randomInt(-20, 20), this.defaultBarracks));
+        }
       }
     }, this);
     this.add.existing(button);
@@ -256,11 +277,17 @@ Jurassic.Game.prototype = {
   },
 
   humanClick: function (human, ptr) {
+    if (this.selectedHuman) {
+      this.selectedHuman.animations.play('unselected');
+    }
     this.selectedHuman = human;
     this.selectedHuman.animations.play('selected');
   },
 
   dinoClick: function (dino, ptr) {
+    if (this.selectedDino) {
+      this.selectedDino.animations.play('unselected');
+    }
     this.selectedDino = dino;
     this.selectedDino.animations.play('selected');
   },
@@ -284,6 +311,9 @@ Jurassic.Game.prototype = {
       this.selectedBarracks.animations.play('unselected');
       this.selectedBarracks = null;
     } else {
+      if (this.selectedBarracks) {
+        this.selectedBarracks.animations.play('unselected');
+      }
       this.selectedBarracks = barracks;
       this.selectedBarracks.animations.play('selected');
     }
