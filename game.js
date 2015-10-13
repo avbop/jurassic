@@ -39,6 +39,12 @@ Jurassic.Game.prototype = {
     this.physics.startSystem(Phaser.Physics.ARCADE);
 
     var bg = this.add.sprite(0, 0, 'bg');
+    bg.inputEnabled = true;
+    bg.events.onInputDown.add(function () {
+      this.selectedDino = null;
+      this.selectedHuman = null;
+      this.selectedBarracks = null;
+    }, this);
 
     this.groups.fences = this.add.group();
     this.groups.gates = this.add.group();
@@ -74,12 +80,16 @@ Jurassic.Game.prototype = {
     barracks1.events.onInputDown.add(this.barracksClick, this);
     this.groups.buildings.add(barracks1);
 
+    // Starting complement.
     for (var i = 0; i < 10; i++) {
       this.addHuman(Jurassic.Grunt(this.game, 150 + Jurassic.randomInt(-50, 50), 10, barracks0));
       this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 10, barracks0));
       this.addHuman(Jurassic.Grunt(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks1));
       this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks1));
     }
+
+    // Starting enemy.
+    this.addDino(Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
 
     this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
     this.modScore(0); // Set starting score.
@@ -111,8 +121,7 @@ Jurassic.Game.prototype = {
       this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
       this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
       if (this.groups.dinos.countLiving() <= this.dinosLost / 5 && Math.random() < 0.004) {
-        var rex = Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY);
-        this.addDino(rex);
+        this.addDino(Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
       }
       this.groups.dinos.forEachDead(function (dino) {
         this.dinosLost++;
@@ -236,19 +245,34 @@ Jurassic.Game.prototype = {
       this.selectedHuman = null;
       this.selectedBarracks = null;
     }
-    var infoText = '';
+    var infoText = 'Assets neutralised: ' + this.dinosLost;
+    infoText += ' | ACUs lost: ' + this.humansLost;
     if (this.selectedDino) {
-      infoText = this.selectedDino.name;
+      infoText += '<br/>Selected: ';
+      infoText += this.selectedDino.name;
       infoText += ' (' + this.selectedDino.health + '/' + this.selectedDino.fullHealth + ')';
     } else if (this.selectedHuman) {
-      infoText = this.selectedHuman.name;
+      infoText += '<br/>Selected: ';
+      infoText += this.selectedHuman.name;
       infoText += ' - ';
       infoText += this.selectedHuman.description;
       infoText += ' (' + this.selectedHuman.health + '/' + this.selectedHuman.fullHealth + ')';
     } else if (this.selectedBarracks) {
-      infoText = this.selectedBarracks.name;
+      infoText += '<br/>Selected: ';
+      infoText += this.selectedBarracks.name;
+      infoText += '<br />Available troops: <ul>';
+      for (var i = 0; i < this.groups.humans.children.length; i++) {
+        var human = this.groups.humans.children[i];
+        if (human.homebase == this.selectedBarracks) {
+          infoText += '<li>';
+          infoText += human.name + ', ' + human.description;
+          infoText += ' (' + human.health + '/' + human.fullHealth + ')';
+          infoText += '</li>';
+        }
+      }
+      infoText += '</ul>';
     } else {
-      infoText = 'Click something to select it.';
+      infoText += '<br/>Click something to select it. Spacebar to pause.';
     }
     document.getElementById(Jurassic.INFO_UI_ID).innerHTML = infoText;
   }
