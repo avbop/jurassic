@@ -45,6 +45,7 @@ Jurassic.Game = function (game) {
   this.selectedHuman = null;
   this.selectedDino = null;
   this.selectedBarracks = null;
+  this.defaultBarracks = null;
 };
 
 Jurassic.Game.prototype = {
@@ -99,18 +100,11 @@ Jurassic.Game.prototype = {
     var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 380, 30, gate2);
     this.groups.fences.add(fence);
 
-    var barracks0 = new Jurassic.Building(this.game, 150, 50, 'Barracks A');
-    barracks0.inputEnabled = true;
-    barracks0.events.onInputDown.add(this.barracksClick, this);
-    this.groups.buildings.add(barracks0);
-    var barracks1 = new Jurassic.Building(this.game, 150, 200, 'Barracks B');
-    barracks1.inputEnabled = true;
-    barracks1.events.onInputDown.add(this.barracksClick, this);
-    this.groups.buildings.add(barracks1);
-    var barracks1 = new Jurassic.Building(this.game, 150, 350, 'Barracks C');
-    barracks1.inputEnabled = true;
-    barracks1.events.onInputDown.add(this.barracksClick, this);
-    this.groups.buildings.add(barracks1);
+    this.addBarracks(new Jurassic.Building(this.game, 150, 50, 'Barracks A'));
+    var barracks = new Jurassic.Building(this.game, 150, 200, 'Barracks B');
+    this.addBarracks(barracks);
+    this.defaultBarracks = barracks;
+    this.addBarracks(new Jurassic.Building(this.game, 150, 350, 'Barracks C'));
 
     // Starting complement.
     for (var i = 0; i < 10; i++) {
@@ -178,6 +172,12 @@ Jurassic.Game.prototype = {
     this.groups.humans.add(human);
     human.inputEnabled = true;
     human.events.onInputDown.add(this.humanClick, this);
+  },
+
+  addBarracks: function (barracks) {
+    this.groups.buildings.add(barracks);
+    barracks.inputEnabled = true;
+    barracks.events.onInputDown.add(this.barracksClick, this);
   },
 
   fight: function (human, dino) {
