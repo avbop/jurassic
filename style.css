@@ -17,6 +17,15 @@ canvas {
   text-align: center;
 }
 
-ul {
+#info ul {
   list-style-type: none;
+}
+
+#instructions {
+  border: thin solid black;
+  background-color: white;
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  width: 40%;
 }

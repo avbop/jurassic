@@ -12,6 +12,17 @@
 
 <div id="game"></div>
 <div id="info"></div>
+<div id="instructions">
+Click on stuff to tell them where to go:
+<ul>
+	<li>ACU + asset: ACU hunts asset.</li>
+	<li>ACU + barracks: Assign ACU to barracks; ACU returns to barracks.</li>
+	<li>barracks + asset: All ACUs assigned to barracks hunt asset.</li>
+	<li>barracks + different barracks: All ACUs assigned to first barracks are assigned and return to second barracks.</li>
+	<li>barracks + same barracks: All ACUs assigned to barracks return there.</li>
+</ul>
+<a href="javascript:void(0);" onclick="closeInstructions();">Close</a>
+</div>
 
 <script src="phaser.js"></script>
 <script src="game.js"></script>
