@@ -31,7 +31,6 @@ server:
 
 clean:
 	rm -r $(DEPLOY_DIR)
-	rm *.pyc
 
 .PHONY: clean deploy server all
 .IGNORE: clean
