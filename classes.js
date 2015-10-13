@@ -128,9 +128,11 @@ Jurassic.Character.prototype.fight = function (enemy) {
 
 Jurassic.Dinosaur = function (game, x, y, colour, health) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
-  Jurassic.Character.call(this, game, '*-saurus', x, y, 150, health, 5, 0.3, 0.3, colour + 'dino');
-  this.scale.setTo(10/255, 10/255);
+  Jurassic.Character.call(this, game, '*-saurus', x, y, 150, health, 5, 0.3, 0.3, 'dino');
   this.prize = 1000;
+  this.animations.add('unselected', [colour], 2, false);
+  this.animations.add('selected', [Jurassic.DINO_COLOUR.RED, colour], 2, true);
+  this.animations.play('unselected');
 }
 Jurassic.Dinosaur.prototype = Object.create(Jurassic.Character.prototype);
 Jurassic.Dinosaur.prototype.constructor = Jurassic.Dinosaur;
@@ -146,15 +148,17 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
 
 Jurassic.Human = function (game, x, y, homebase, colour, health) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
-  Jurassic.Character.call(this, game, 'Socrates', x, y, 100, health, 50, 0.3, 0.3, colour + 'human');
-  this.scale.setTo(8/605, 8/605);
+  Jurassic.Character.call(this, game, 'Socrates', x, y, 100, health, 50, 0.3, 0.3, 'human');
   this.homebase = homebase;
   this.description = 'A rational animal.'
+  this.animations.add('unselected', [colour], 2, false);
+  this.animations.add('selected', [Jurassic.HUMAN_COLOUR.RED, colour], 2, true);
+  this.animations.play('unselected');
 }
 Jurassic.Human.prototype = Object.create(Jurassic.Character.prototype);
 Jurassic.Human.prototype.constructor = Jurassic.Human;
 Jurassic.Human.prototype.defaultMove = function () {
-  if (this.homebase.position.distance(this.position) > 60) {
+  if (this.homebase.position.distance(this.position) > 20) {
     this.setPrey(this.homebase);
   } else {
     this.velocity = 0;
@@ -166,9 +170,11 @@ Jurassic.Building = function (game, x, y, name) {
   game.physics.arcade.enable(this);
   this.body.immovable = true;
   this.targetable = true;
-  this.scale.setTo(50/605, 50/605);
   this.anchor.setTo(0.5, 0.5);
-  this.name = name
+  this.name = name;
+  this.animations.add('unselected', [1], 2, false);
+  this.animations.add('selected', [0, 1], 2, true);
+  this.animations.play('unselected');
 };
 Jurassic.Building.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Building.prototype.constructor = Jurassic.Building;

@@ -1,7 +1,7 @@
 /* ACU (Humans) */
 
 Jurassic.Dog = function (game, x, y, homebase) {
-  var h = new Jurassic.Human(game, x, y, homebase, 'green', 50);
+  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.GREEN, 50);
   h.name = 'Rover';
   h.description = 'A guard dog.';
   h.attackStrength = 10;
@@ -10,7 +10,7 @@ Jurassic.Dog = function (game, x, y, homebase) {
 }
 
 Jurassic.Grunt = function (game, x, y, homebase) {
-  var h = new Jurassic.Human(game, x, y, homebase, 'red', 100);
+  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.TEAL, 100);
   h.name = 'Joe';
   h.description = 'A dutiful soldier.';
   h.attackStrength = 50;
@@ -21,7 +21,7 @@ Jurassic.Grunt = function (game, x, y, homebase) {
 /* Dinosaurs */
 
 Jurassic.BabyStegosaurus = function (game, x, y) {
-  var d = new Jurassic.Dinosaur(game, x, y, 'red', 200);
+  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.PINK, 200);
   d.prize = 1000;
   d.name = 'Baby Stegosaurus';
   d.attackStrength = 10;

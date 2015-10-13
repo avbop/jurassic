@@ -5,7 +5,27 @@ var Jurassic = {
   WORLD_HEIGHT: 400,
   BORDER: 250,
   GATE_DELAY: 3 * Phaser.Timer.SECOND,
-  INFO_UI_ID: 'info'
+  INFO_UI_ID: 'info',
+  HUMAN_COLOUR: {
+    RED: 0,
+    TEAL: 1,
+    BLUE: 2,
+    NAVY: 3,
+    AQUA: 4,
+    LIME: 5,
+    GREEN: 6,
+    PURPLE: 7
+  },
+  DINO_COLOUR: {
+    RED: 0,
+    YELLOW: 1,
+    ORANGE: 2,
+    BURNT: 3,
+    MAROON: 4,
+    WHITE: 5,
+    SAND: 6,
+    PINK: 7
+  }
 };
 
 // The Game state.
@@ -191,10 +211,12 @@ Jurassic.Game.prototype = {
 
   humanClick: function (human, ptr) {
     this.selectedHuman = human;
+    this.selectedHuman.animations.play('selected');
   },
 
   dinoClick: function (dino, ptr) {
     this.selectedDino = dino;
+    this.selectedDino.animations.play('selected');
   },
 
   barracksClick: function (barracks, ptr) {
@@ -204,6 +226,7 @@ Jurassic.Game.prototype = {
           human.setPrey(human.homebase);
         }
       }, this);
+      this.selectedBarracks.animations.play('unselected');
       this.selectedBarracks = null;
     } else if (this.selectedBarracks) {
       this.groups.humans.forEach(function (human) {
@@ -212,9 +235,11 @@ Jurassic.Game.prototype = {
           human.setPrey(human.homebase);
         }
       }, this);
+      this.selectedBarracks.animations.play('unselected');
       this.selectedBarracks = null;
     } else {
       this.selectedBarracks = barracks;
+      this.selectedBarracks.animations.play('selected');
     }
   },
 
@@ -223,11 +248,14 @@ Jurassic.Game.prototype = {
       this.selectedDino = null;
     }
     if (this.selectedHuman && !this.selectedHuman.alive) {
+      this.selectedHuman.animations.play('unselected');
       this.selectedHuman = null;
     }
     if (this.selectedDino && this.selectedHuman) {
       this.selectedHuman.setPrey(this.selectedDino);
+      this.selectedHuman.animations.play('unselected');
       this.selectedHuman = null;
+      this.selectedDino.animations.play('unselected');
       this.selectedDino = null;
     }
     if (this.selectedDino && this.selectedBarracks) {
@@ -236,13 +264,17 @@ Jurassic.Game.prototype = {
           human.setPrey(this.selectedDino);
         }
       }, this);
+      this.selectedBarracks.animations.play('unselected');
       this.selectedBarracks = null;
+      this.selectedDino.animations.play('unselected');
       this.selectedDino = null;
     }
     if (this.selectedHuman && this.selectedBarracks) {
       this.selectedHuman.homebase = this.selectedBarracks;
       this.selectedHuman.setPrey(this.selectedBarracks);
+      this.selectedHuman.animations.play('unselected');
       this.selectedHuman = null;
+      this.selectedBarracks.animations.play('unselected');
       this.selectedBarracks = null;
     }
     var infoText = 'Assets neutralised: ' + this.dinosLost;
