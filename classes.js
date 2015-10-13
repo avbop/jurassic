@@ -1,5 +1,3 @@
-"use strict";
-
 Jurassic.randomInt = function (min, max) {
   // https://stackoverflow.com/questions/1527803/generating-random-numbers-in-javascript-in-a-specific-range
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -36,7 +34,7 @@ Jurassic.Character = function (game, name, x, y, velocity, health, attack, attac
   this.body.collideWorldBounds = true;
   this.body.gravity.y = 0;
   this.maxVelocity = velocity;
-  this.maxTurn = 5 * Math.PI / 180;
+  //this.maxTurn = 5 * Math.PI / 180;
   this.velocity = 0;
   this.direction = 0;
   this.target = null;
@@ -68,7 +66,7 @@ Jurassic.Character.prototype.move = function () {
     this.prey = null;
   }
   if (this.target) {
-    var theta0 = Jurassic.directionTo(this, this.target);
+    /*var theta0 = Jurassic.directionTo(this, this.target);
     var theta = theta0;
     // Normalise to -2π <= ret < 2π.
     this.direction %= (2 * Math.PI);
@@ -85,7 +83,8 @@ Jurassic.Character.prototype.move = function () {
       this.direction += this.maxTurn;
     } else {
       this.direction = theta;
-    }
+    }*/
+    this.direction = Jurassic.directionTo(this, this.target);
     this.velocity = this.maxVelocity;
   } else if (this.alive) {
     this.defaultMove();
@@ -145,9 +144,9 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
   this.velocity = this.maxVelocity;
 };
 
-Jurassic.Human = function (game, x, y, homebase, colour) {
+Jurassic.Human = function (game, x, y, homebase, colour, health) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
-  Jurassic.Character.call(this, game, 'Socrates', x, y, 100, 50, 10, 0.3, 0.3, colour + 'human');
+  Jurassic.Character.call(this, game, 'Socrates', x, y, 100, health, 50, 0.3, 0.3, colour + 'human');
   this.scale.setTo(8/605, 8/605);
   this.homebase = homebase;
   this.description = 'A rational animal.'
@@ -155,7 +154,11 @@ Jurassic.Human = function (game, x, y, homebase, colour) {
 Jurassic.Human.prototype = Object.create(Jurassic.Character.prototype);
 Jurassic.Human.prototype.constructor = Jurassic.Human;
 Jurassic.Human.prototype.defaultMove = function () {
-  this.setPrey(this.homebase);
+  if (this.homebase.position.distance(this.position) > 60) {
+    this.setPrey(this.homebase);
+  } else {
+    this.velocity = 0;
+  }
 };
 
 Jurassic.Building = function (game, x, y, name) {

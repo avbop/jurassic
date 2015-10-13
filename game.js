@@ -1,5 +1,3 @@
-"use strict";
-
 // Namespace for the game.
 var Jurassic = {
   // Configuration constants.
@@ -45,9 +43,9 @@ Jurassic.Game.prototype = {
 
     this.groups.fences = this.add.group();
     this.groups.gates = this.add.group();
+    this.groups.buildings = this.add.group();
     this.groups.dinos = this.add.group();
     this.groups.humans = this.add.group();
-    this.groups.buildings = this.add.group();
 
     var gate0 = new Jurassic.Gate(this.game, Jurassic.BORDER, 50);
     this.groups.gates.add(gate0);
@@ -78,8 +76,10 @@ Jurassic.Game.prototype = {
     this.groups.buildings.add(barracks1);
 
     for (var i = 0; i < 10; i++) {
-      this.addHuman(new Jurassic.Human(this.game, 150 + Jurassic.randomInt(-10, 10), 10, barracks0, 'green'));
-      this.addHuman(new Jurassic.Human(this.game, 150 + Jurassic.randomInt(-10, 10), 300, barracks1, 'green'));
+      this.addHuman(Jurassic.Grunt(this.game, 150 + Jurassic.randomInt(-50, 50), 10, barracks0));
+      this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 10, barracks0));
+      this.addHuman(Jurassic.Grunt(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks1));
+      this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks1));
     }
 
     this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
@@ -93,15 +93,14 @@ Jurassic.Game.prototype = {
     this.physics.arcade.collide(this.groups.dinos, this.groups.dinos);
     this.physics.arcade.collide(this.groups.humans, this.groups.humans);
     this.physics.arcade.collide(this.groups.buildings, this.groups.dinos);
-    this.physics.arcade.collide(this.groups.buildings, this.groups.humans);
+    this.physics.arcade.overlap(this.groups.buildings, this.groups.humans, this.inBuilding, null, this);
     this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, null, this);
     this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, null, this);
-    this.physics.arcade.collide(this.groups.gates, this.groups.dinos, this.dinoOnGate, this.testGate, this);
+    this.physics.arcade.collide(this.groups.gates, this.groups.dinos, null, this.testGate, this);
     this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
     this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
-    if (this.groups.dinos.countLiving() <= this.dinosLost / 10 && Math.random() < 0.007) {
-      var rex = new Jurassic.Dinosaur(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY, 'red', this.score / 100 + 10);
-      rex.attackStrength = this.score / 100 + 1;
+    if (this.groups.dinos.countLiving() <= this.dinosLost / 5 && Math.random() < 0.007) {
+      var rex = Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY);
       this.addDino(rex);
     }
     this.updateUI();
@@ -147,21 +146,26 @@ Jurassic.Game.prototype = {
   },
 
   testGate: function (gate, character) {
-    if (character.target && character.prey) console.log(character.target.x, character.prey.x);
     if (character.prey) {
       character.setTarget(character.prey);
+    } else if (character.target == gate) {
+      character.setTarget(null);
     }
     return !gate.isOpen;
   },
 
   onFence: function (fence, character) {
-    character.setTarget(fence.gate);
+    if (character.target || character.prey) {
+      character.setTarget(fence.gate);
+    }
   },
 
-  dinoOnGate: function (gate, dino) {
-    /*if (dino.prey) {
-      dino.setTarget(dino.prey);
-    }*/
+  inBuilding: function (building, human) {
+    if (human.prey && human.prey == building) {
+      human.setPrey(null);
+    } else if (human.target && human.target == building) {
+      human.setTarget(null);
+    }
   },
 
   humanClick: function (human, ptr) {
@@ -203,6 +207,7 @@ Jurassic.Game.prototype = {
     if (this.selectedDino && this.selectedHuman) {
       this.selectedHuman.setPrey(this.selectedDino);
       this.selectedHuman = null;
+      this.selectedDino = null;
     }
     if (this.selectedDino && this.selectedBarracks) {
       this.groups.humans.forEach(function (human) {
@@ -211,6 +216,7 @@ Jurassic.Game.prototype = {
         }
       }, this);
       this.selectedBarracks = null;
+      this.selectedDino = null;
     }
     if (this.selectedHuman && this.selectedBarracks) {
       this.selectedHuman.homebase = this.selectedBarracks;

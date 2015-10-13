@@ -1,5 +1,3 @@
-"use strict";
-
 // The Boot state.
 
 Jurassic.Boot = function (game) {
