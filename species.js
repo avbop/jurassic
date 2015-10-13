@@ -38,7 +38,7 @@ Jurassic.Tank = function (game, x, y, homebase) {
   h.attackStrength = 200;
   h.defendPercent = 0.5;
   h.maxVelocity = 50;
-  h.price = 20000;
+  h.price = 40000;
   return h;
 }
 
@@ -63,17 +63,30 @@ Jurassic.Stegosaurus = function (game, x, y) {
 }
 
 Jurassic.Brachiosaurus = function (game, x, y) {
-  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.MAROON, 500);
-  d.prize = 5000;
+  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.SAND, 2000);
+  d.prize = 7000;
   d.name = 'Brachiosaurus';
-  d.attackStrength = 30;
-  d.maxVelocity = 100;
+  d.attackStrength = 100;
+  d.maxVelocity = 30;
+  d.defendPercent = 0.5;
+  return d;
+}
+
+Jurassic.Tyrranosaurus = function (game, x, y) {
+  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.BURNT, 10000);
+  d.prize = 10000;
+  d.name = 'Tyrranosaurus Rex';
+  d.attackStrength = 200;
+  d.maxVelocity = 200;
+  d.defendPercent = 0.5;
+  d.attackPercent = 0.5;
   return d;
 }
 
 Jurassic.Mutant = function (game, x, y, health) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.WHITE, health);
-  d.prize = health;
+  d.prize = 10000;
   d.name = 'Genetic Engineering Model X-' + d.id;
+  d.maxVelocity = 400;
   return d;
 }

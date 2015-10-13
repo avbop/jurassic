@@ -157,19 +157,47 @@ Jurassic.Game.prototype = {
       this.physics.arcade.collide(this.groups.gates, this.groups.dinos, null, this.testGate, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
       this.physics.arcade.overlap(this.groups.humans, this.groups.dinos, this.fight, null, this);
-      if (this.groups.dinos.countLiving() <= this.dinosLost / 6 && Math.random() < 0.004) {
+      if (this.groups.dinos.countLiving() <= this.dinosLost / 6 && Math.random() < 0.005) {
         var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width);
         var y = this.world.randomY;
+        var rand = Math.random();
         if (this.dinosLost < 5) {
           this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));
         } else if (this.dinosLost < 10) {
-          this.addDino(Jurassic.Stegosaurus(this.game, x, y));
+          if (rand < 0.3) {
+            this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));
+          } else {
+            this.addDino(Jurassic.Stegosaurus(this.game, x, y));
+          }
+        } else if (this.dinosLost < 20) {
+          if (rand < 0.1) {
+            this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));
+          } else if (rand < 0.5) {
+            this.addDino(Jurassic.Stegosaurus(this.game, x, y));
+          } else {
+            this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
+          }
+        } else if (this.dinosLost < 40) {
+          if (rand < 0.1) {
+            this.addDino(Jurassic.Stegosaurus(this.game, x, y));
+          } else if (rand < 0.5) {
+            this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
+          } else {
+            this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
+          }
         } else {
-          var irex = Jurassic.Mutant(this.game, x, y, this.dinosLost * 100);
-          irex.attackStrength = this.dinosLost * 10;
-          irex.maxVelocity = this.dinosLost * 10;
-          irex.setPrey(this.groups.humans.children[Jurassic.randomInt(0, this.groups.humans.children.length - 1)]);
-          this.addDino(irex);
+          if (rand < 0.1) {
+            this.addDino(Jurassic.Stegosaurus(this.game, x, y));
+          } else if (rand < 0.4) {
+            this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
+          } else if (rand < 0.7) {
+            this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
+          } else {
+            var irex = Jurassic.Mutant(this.game, x, y, this.dinosLost * 100);
+            irex.attackStrength = this.dinosLost * 10;
+            irex.setPrey(this.groups.humans.children[Jurassic.randomInt(0, this.groups.humans.children.length - 1)]);
+            this.addDino(irex);
+          }
         }
       }
       this.groups.dinos.forEachDead(function (dino) {
