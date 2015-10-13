@@ -82,8 +82,8 @@ Jurassic.Game.prototype = {
     }, this);
 
     this.addButton(Jurassic.Dog, 10);
-    this.addButton(Jurassic.Grunt, 10);
-    this.addButton(Jurassic.Armour, 10);
+    this.addButton(Jurassic.Grunt, 5);
+    this.addButton(Jurassic.Armour, 5);
     this.addButton(Jurassic.Tank, 1);
 
     this.groups.fences = this.add.group();
@@ -119,7 +119,7 @@ Jurassic.Game.prototype = {
     this.addBarracks(barracks2);
 
     // Starting complement.
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 5; i++) {
       this.addHuman(Jurassic.Grunt(this.game, 150 + Jurassic.randomInt(-50, 50), 10, barracks0));
       this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 10, barracks0));
       this.addHuman(Jurassic.Grunt(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks2));
