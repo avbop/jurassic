@@ -8,7 +8,7 @@ Jurassic.Dog = function (game, x, y, homebase) {
   h.description = 'A guard dog.';
   h.attackStrength = 10;
   h.maxVelocity = 100;
-  h.price = 100;
+  h.price = 200;
   return h;
 }
 
@@ -17,7 +17,7 @@ Jurassic.Grunt = function (game, x, y, homebase) {
   h.description = 'A soldier.';
   h.attackStrength = 50;
   h.maxVelocity = 70;
-  h.price = 500;
+  h.price = 1000;
   return h;
 }
 
@@ -27,7 +27,7 @@ Jurassic.Armour = function (game, x, y, homebase) {
   h.attackStrength = 40;
   h.defendPercent = 0.85;
   h.maxVelocity = 50;
-  h.price = 700;
+  h.price = 1400;
   return h;
 }
 
@@ -38,7 +38,7 @@ Jurassic.Tank = function (game, x, y, homebase) {
   h.attackStrength = 200;
   h.defendPercent = 0.5;
   h.maxVelocity = 50;
-  h.price = 40000;
+  h.price = 50000;
   return h;
 }
 
