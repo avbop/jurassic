@@ -129,7 +129,7 @@ Jurassic.Character.prototype.fight = function (enemy) {
 
 Jurassic.Dinosaur = function (game, x, y, colour, health) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
-  Jurassic.Character.call(this, game, '*-saurus', x, y, 100, health, 5, 0.3, 0.3, colour + 'dino');
+  Jurassic.Character.call(this, game, '*-saurus', x, y, 150, health, 5, 0.3, 0.3, colour + 'dino');
   this.scale.setTo(10/255, 10/255);
   this.prize = 1000;
 }
@@ -147,7 +147,7 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
 
 Jurassic.Human = function (game, x, y, homebase, colour) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
-  Jurassic.Character.call(this, game, 'Socrates', x, y, 50, 10, 10, 0.3, 0.3, colour + 'human');
+  Jurassic.Character.call(this, game, 'Socrates', x, y, 100, 50, 10, 0.3, 0.3, colour + 'human');
   this.scale.setTo(8/605, 8/605);
   this.homebase = homebase;
   this.description = 'A rational animal.'

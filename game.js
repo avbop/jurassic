@@ -6,7 +6,7 @@ var Jurassic = {
   WORLD_WIDTH: 800,
   WORLD_HEIGHT: 400,
   BORDER: 250,
-  GATE_DELAY: 2 * Phaser.Timer.SECOND,
+  GATE_DELAY: 3 * Phaser.Timer.SECOND,
   INFO_UI_ID: 'info'
 };
 
@@ -42,12 +42,6 @@ Jurassic.Game.prototype = {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     var bg = this.add.sprite(0, 0, 'bg');
-    bg.inputEnabled = true;
-    bg.events.onInputDown.add(function (sprite, ptr) {
-      this.selectedDino = null;
-      this.selectedBarracks = null;
-      this.selectedHuman = null;
-    }, this);
 
     this.groups.fences = this.add.group();
     this.groups.gates = this.add.group();
@@ -83,15 +77,10 @@ Jurassic.Game.prototype = {
     barracks1.events.onInputDown.add(this.barracksClick, this);
     this.groups.buildings.add(barracks1);
 
-    var dude = new Jurassic.Human(this.game, 150, 300, barracks0, 'green');
-    this.groups.humans.add(dude);
-    dude.inputEnabled = true;
-    dude.events.onInputDown.add(this.humanClick, this);
-
-    var dude = new Jurassic.Human(this.game, 150, 10, barracks1, 'red');
-    this.groups.humans.add(dude);
-    dude.inputEnabled = true;
-    dude.events.onInputDown.add(this.humanClick, this);
+    for (var i = 0; i < 10; i++) {
+      this.addHuman(new Jurassic.Human(this.game, 150 + Jurassic.randomInt(-10, 10), 10, barracks0, 'green'));
+      this.addHuman(new Jurassic.Human(this.game, 150 + Jurassic.randomInt(-10, 10), 300, barracks1, 'green'));
+    }
 
     this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
     this.modScore(0); // Set starting score.
@@ -111,22 +100,28 @@ Jurassic.Game.prototype = {
     this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
     this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
     if (this.groups.dinos.countLiving() <= this.dinosLost / 10 && Math.random() < 0.007) {
-      var rex = new Jurassic.Dinosaur(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY, 'red', 2 * this.score / 1000 + 1000);
-      rex.attackStrength = 2 * this.score / 1000;
-      rex.setPrey(this.groups.buildings.children[0]);
-      rex.inputEnabled = true;
-      rex.events.onInputDown.add(this.dinoClick, this);
-      this.groups.dinos.add(rex);
+      var rex = new Jurassic.Dinosaur(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY, 'red', this.score / 100 + 10);
+      rex.attackStrength = this.score / 100 + 1;
+      this.addDino(rex);
     }
     this.updateUI();
+  },
+
+  addDino: function (dino) {
+    this.groups.dinos.add(dino);
+    dino.inputEnabled = true;
+    dino.events.onInputDown.add(this.dinoClick, this);
+  },
+
+  addHuman: function (human) {
+    this.groups.humans.add(human);
+    human.inputEnabled = true;
+    human.events.onInputDown.add(this.humanClick, this);
   },
 
   fight: function (human, dino) {
     dino.fight(human);
     human.fight(dino);
-    if (!dino.alive || !human.alive) {
-      this.updateUI();
-    }
     if (!dino.alive) {
       this.dinosLost++;
       this.modScore(dino.prize);
@@ -152,7 +147,8 @@ Jurassic.Game.prototype = {
   },
 
   testGate: function (gate, character) {
-    if (gate.isOpen && character.prey) {
+    if (character.target && character.prey) console.log(character.target.x, character.prey.x);
+    if (character.prey) {
       character.setTarget(character.prey);
     }
     return !gate.isOpen;
@@ -183,8 +179,18 @@ Jurassic.Game.prototype = {
           human.setPrey(human.homebase);
         }
       }, this);
+      this.selectedBarracks = null;
+    } else if (this.selectedBarracks) {
+      this.groups.humans.forEach(function (human) {
+        if (human.homebase == this.selectedBarracks) {
+          human.homebase = barracks;
+          human.setPrey(human.homebase);
+        }
+      }, this);
+      this.selectedBarracks = null;
+    } else {
+      this.selectedBarracks = barracks;
     }
-    this.selectedBarracks = barracks;
   },
 
   updateUI: function () {
@@ -197,7 +203,6 @@ Jurassic.Game.prototype = {
     if (this.selectedDino && this.selectedHuman) {
       this.selectedHuman.setPrey(this.selectedDino);
       this.selectedHuman = null;
-      this.selectedDino = null;
     }
     if (this.selectedDino && this.selectedBarracks) {
       this.groups.humans.forEach(function (human) {
@@ -205,7 +210,6 @@ Jurassic.Game.prototype = {
           human.setPrey(this.selectedDino);
         }
       }, this);
-      this.selectedDino = null;
       this.selectedBarracks = null;
     }
     if (this.selectedHuman && this.selectedBarracks) {
@@ -217,12 +221,12 @@ Jurassic.Game.prototype = {
     var infoText = '';
     if (this.selectedDino) {
       infoText = this.selectedDino.name;
-      infoText += ' (' + Math.round(this.selectedDino.health / this.selectedDino.fullHealth) * 100 + '%)';
+      infoText += ' (' + this.selectedDino.health + '/' + this.selectedDino.fullHealth + ')';
     } else if (this.selectedHuman) {
       infoText = this.selectedHuman.name;
       infoText += ' - ';
       infoText += this.selectedHuman.description;
-      infoText += ' (' + Math.round(this.selectedHuman.health / this.selectedHuman.fullHealth) * 100 + '%)';
+      infoText += ' (' + this.selectedHuman.health + '/' + this.selectedHuman.fullHealth + ')';
     } else if (this.selectedBarracks) {
       infoText = this.selectedBarracks.name;
     } else {
