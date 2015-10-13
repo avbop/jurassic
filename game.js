@@ -37,7 +37,6 @@ Jurassic.Game.prototype = {
     this.stage.disableVisibilityChange = false; // Pause when out of focus.
     this.world.setBounds(0, 0, Jurassic.WORLD_WIDTH, Jurassic.WORLD_HEIGHT);
     this.physics.startSystem(Phaser.Physics.ARCADE);
-    this.cursors = this.input.keyboard.createCursorKeys();
 
     var bg = this.add.sprite(0, 0, 'bg');
 
@@ -85,23 +84,45 @@ Jurassic.Game.prototype = {
     this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
     this.modScore(0); // Set starting score.
 
+    var pauseKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    pauseKey.onDown.add(function () {
+      if (this.physics.arcade.isPaused) {
+        this.physics.arcade.isPaused = false;
+        this.time.events.resume();
+      } else {
+        this.physics.arcade.isPaused = true;
+        this.time.events.pause();
+      }
+    }, this);
+
     this.updateUI();
   },
 
   update: function () {
     // [FPS] this.fpsText.setText(this.time.fps || '--');
-    this.physics.arcade.collide(this.groups.dinos, this.groups.dinos);
-    this.physics.arcade.collide(this.groups.humans, this.groups.humans);
-    this.physics.arcade.collide(this.groups.buildings, this.groups.dinos);
-    this.physics.arcade.overlap(this.groups.buildings, this.groups.humans, this.inBuilding, null, this);
-    this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, null, this);
-    this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, null, this);
-    this.physics.arcade.collide(this.groups.gates, this.groups.dinos, null, this.testGate, this);
-    this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
-    this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
-    if (this.groups.dinos.countLiving() <= this.dinosLost / 5 && Math.random() < 0.007) {
-      var rex = Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY);
-      this.addDino(rex);
+    if (!this.physics.arcade.isPaused) {
+      this.physics.arcade.collide(this.groups.dinos, this.groups.dinos);
+      this.physics.arcade.collide(this.groups.humans, this.groups.humans);
+      this.physics.arcade.collide(this.groups.buildings, this.groups.dinos);
+      this.physics.arcade.overlap(this.groups.buildings, this.groups.humans, this.inBuilding, null, this);
+      this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, null, this);
+      this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, null, this);
+      this.physics.arcade.collide(this.groups.gates, this.groups.dinos, null, this.testGate, this);
+      this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
+      this.physics.arcade.collide(this.groups.humans, this.groups.dinos, this.fight, null, this);
+      if (this.groups.dinos.countLiving() <= this.dinosLost / 5 && Math.random() < 0.004) {
+        var rex = Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY);
+        this.addDino(rex);
+      }
+      this.groups.dinos.forEachDead(function (dino) {
+        this.dinosLost++;
+        this.modScore(dino.prize);
+        dino.destroy();
+      }, this);
+      this.groups.humans.forEachDead(function (human) {
+        this.humansLost++;
+        human.destroy();
+      }, this);
     }
     this.updateUI();
   },
@@ -121,15 +142,6 @@ Jurassic.Game.prototype = {
   fight: function (human, dino) {
     dino.fight(human);
     human.fight(dino);
-    if (!dino.alive) {
-      this.dinosLost++;
-      this.modScore(dino.prize);
-      dino.destroy();
-    }
-    if (!human.alive) {
-      this.humansLost++;
-      human.destroy();
-    }
   },
 
   modScore: function (delta) {

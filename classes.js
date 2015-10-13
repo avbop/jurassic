@@ -179,14 +179,18 @@ Jurassic.Gate = function (game, x, y) {
   game.physics.arcade.enable(this);
   this.body.immovable = true;
   this.targetable = true;
-  var openAnim = this.animations.add('open', [0], 10, false);
-  openAnim.onComplete.add(function () {
+  var openAnim = this.animations.add('open', [5, 6], 2, true);
+  var openingAnim = this.animations.add('opening', [0, 2, 3, 4], 10, false);
+  openingAnim.onComplete.add(function () {
     this.isOpen = true;
+    this.animations.play('open');
     this.game.time.events.add(Jurassic.GATE_DELAY, this.close, this);
   }, this);
-  var closeAnim = this.animations.add('close', [1], 10, false);
-  closeAnim.onComplete.add(function () {
+  var closedAnim = this.animations.add('closed', [0], 2, false);
+  var closingAnim = this.animations.add('closing', [5, 9, 8, 7], 10, false);
+  closingAnim.onComplete.add(function () {
     this.isOpen = false;
+    this.animations.play('closed');
   }, this);
   this.isOpen = true;
   this.close();
@@ -194,14 +198,14 @@ Jurassic.Gate = function (game, x, y) {
 Jurassic.Gate.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Gate.prototype.constructor = Jurassic.Gate;
 Jurassic.Gate.prototype.close = function () {
-  this.animations.play('close');
+  this.animations.play('closing');
 };
 Jurassic.Gate.prototype.open = function () {
-  this.animations.play('open');
+  this.animations.play('opening');
 };
 
 Jurassic.Fence = function (game, x, y, height, gate) {
-  Phaser.TileSprite.call(this, game, x, y, 10, height, 'fence');
+  Phaser.TileSprite.call(this, game, x, y, 8, height, 'fence');
   game.physics.arcade.enable(this);
   this.body.immovable = true;
   this.anchor.setTo(0.5, 0);
