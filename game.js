@@ -61,9 +61,18 @@ Jurassic.Game.prototype = {
     var bg = this.add.sprite(0, 0, 'bg');
     bg.inputEnabled = true;
     bg.events.onInputDown.add(function () {
-      this.selectedDino = null;
-      this.selectedHuman = null;
-      this.selectedBarracks = null;
+      if (this.selectedDino) {
+        this.selectedDino.animations.play('unselected');
+        this.selectedDino = null;
+      }
+      if (this.selectedHuman) {
+        this.selectedHuman.animations.play('unselected');
+        this.selectedHuman = null;
+      }
+      if (this.selectedBarracks) {
+        this.selectedBarracks.animations.play('unselected');
+        this.selectedBarracks = null;
+      }
     }, this);
 
     this.groups.fences = this.add.group();
@@ -90,12 +99,15 @@ Jurassic.Game.prototype = {
     var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 380, 30, gate2);
     this.groups.fences.add(fence);
 
-    var barracks0 = new Jurassic.Building(this.game, 100, 65, 'Barracks A');
+    var barracks0 = new Jurassic.Building(this.game, 150, 50, 'Barracks A');
     barracks0.inputEnabled = true;
     barracks0.events.onInputDown.add(this.barracksClick, this);
     this.groups.buildings.add(barracks0);
-
-    var barracks1 = new Jurassic.Building(this.game, 100, 365, 'Barracks B');
+    var barracks1 = new Jurassic.Building(this.game, 150, 200, 'Barracks B');
+    barracks1.inputEnabled = true;
+    barracks1.events.onInputDown.add(this.barracksClick, this);
+    this.groups.buildings.add(barracks1);
+    var barracks1 = new Jurassic.Building(this.game, 150, 350, 'Barracks C');
     barracks1.inputEnabled = true;
     barracks1.events.onInputDown.add(this.barracksClick, this);
     this.groups.buildings.add(barracks1);
