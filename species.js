@@ -42,6 +42,24 @@ Jurassic.Tank = function (game, x, y, homebase) {
   return h;
 }
 
+Jurassic.Helicopter = function (game, x, y, homebase) {
+  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.BLUE, 500);
+  h.name = 'AH-64 Apache';
+  h.description = 'A helicopter.';
+  h.attackStrength = 200;
+  h.maxVelocity = 250;
+  h.aerial = true;
+  h.price = 100000;
+  h.defaultMove = function () {
+    Jurassic.Human.prototype.defaultMove.call(this);
+    if (Math.random() < 0.0001) {
+      this.animations.play('selected');
+      this.game.time.events.add(Phaser.Timer.SECOND * 5, this.kill, this);
+    }
+  };
+  return h;
+}
+
 /* Dinosaurs */
 
 Jurassic.BabyStegosaurus = function (game, x, y) {
@@ -63,7 +81,7 @@ Jurassic.Stegosaurus = function (game, x, y) {
 }
 
 Jurassic.Brachiosaurus = function (game, x, y) {
-  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.SAND, 2000);
+  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.SAND, 3000);
   d.prize = 3000;
   d.name = 'Brachiosaurus';
   d.attackStrength = 100;
@@ -80,6 +98,16 @@ Jurassic.Tyrranosaurus = function (game, x, y) {
   d.maxVelocity = 200;
   d.defendPercent = 0.5;
   d.attackPercent = 0.5;
+  return d;
+}
+
+Jurassic.Pterodactyl = function (game, x, y) {
+  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.YELLOW, 1000);
+  d.prize = 3000;
+  d.name = 'Pterodactyl';
+  d.attackStrength = 30;
+  d.maxVelocity = 250;
+  d.aerial = true;
   return d;
 }
 

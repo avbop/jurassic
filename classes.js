@@ -117,6 +117,9 @@ Jurassic.Character.prototype.defendSuccess = function () {
   this.defendPercent += 0.1 * (1 - this.defendPercent);
 };
 Jurassic.Character.prototype.fight = function (enemy) {
+  if (!this.aerial && enemy.aerial) {
+    return false;
+  }
   if (Math.random() < this.attackPercent && Math.random() > enemy.defendPercent) {
     // Successful attack.
     enemy.damage(this.attackStrength);
@@ -132,6 +135,7 @@ Jurassic.Dinosaur = function (game, x, y, colour, health) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
   Jurassic.Character.call(this, game, '*-saurus', x, y, 150, health, 5, 0.3, 0.3, 'dino');
   this.prize = 1000;
+  this.aerial = false;
   this.animations.add('unselected', [colour], 2, false);
   this.animations.add('selected', [Jurassic.DINO_COLOUR.RED, colour], 2, true);
   this.animations.play('unselected');
@@ -161,6 +165,7 @@ Jurassic.Human = function (game, x, y, homebase, colour, health) {
   this.description = 'A rational animal.'
   this.price = 1000;
   this.colour = colour;
+  this.aerial = false;
   this.animations.add('unselected', [colour], 2, false);
   this.animations.add('selected', [Jurassic.HUMAN_COLOUR.RED, colour], 2, true);
   this.animations.play('unselected');

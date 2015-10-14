@@ -85,6 +85,7 @@ Jurassic.Game.prototype = {
     this.addButton(Jurassic.Grunt, 5);
     this.addButton(Jurassic.Armour, 5);
     this.addButton(Jurassic.Tank, 1);
+    this.addButton(Jurassic.Helicopter, 1);
 
     this.groups.fences = this.add.group();
     this.groups.gates = this.add.group();
@@ -128,6 +129,7 @@ Jurassic.Game.prototype = {
 
     // Starting enemy.
     this.addDino(Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
+    this.addDino(Jurassic.Pterodactyl(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
 
     this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
     this.modScore(0); // Set starting score.
@@ -149,11 +151,11 @@ Jurassic.Game.prototype = {
   update: function () {
     // [FPS] this.fpsText.setText(this.time.fps || '--');
     if (!this.physics.arcade.isPaused) {
-      this.physics.arcade.collide(this.groups.dinos, this.groups.dinos);
-      this.physics.arcade.collide(this.groups.humans, this.groups.humans);
+      this.physics.arcade.collide(this.groups.dinos, this.groups.dinos, null, this.isAerial, this);
+      this.physics.arcade.collide(this.groups.humans, this.groups.humans, null, this.isAerial, this);
       this.physics.arcade.overlap(this.groups.buildings, this.groups.humans, this.inBuilding, null, this);
-      this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, null, this);
-      this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, null, this);
+      this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, this.isAerial, this);
+      this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, this.isAerial, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.dinos, null, this.testGate, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
       this.physics.arcade.overlap(this.groups.humans, this.groups.dinos, this.fight, null, this);
@@ -286,6 +288,7 @@ Jurassic.Game.prototype = {
   },
 
   testGate: function (gate, character) {
+    if (character.aerial) return false;
     if (character.prey) {
       character.setTarget(character.prey);
     } else if (character.target == gate) {
@@ -306,6 +309,10 @@ Jurassic.Game.prototype = {
     } else if (human.target && human.target == building) {
       human.setTarget(null);
     }
+  },
+
+  isAerial: function (x, y) {
+    return !(x.aerial || y.aerial);
   },
 
   humanClick: function (human, ptr) {
