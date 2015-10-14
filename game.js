@@ -129,7 +129,6 @@ Jurassic.Game.prototype = {
 
     // Starting enemy.
     this.addDino(Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
-    this.addDino(Jurassic.Pterodactyl(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
 
     this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
     this.modScore(0); // Set starting score.
