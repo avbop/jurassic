@@ -406,7 +406,7 @@ Jurassic.Game.prototype = {
     } else if (this.selectedBarracks) {
       infoText += '<br/>Selected: ';
       infoText += this.selectedBarracks.name;
-      infoText += '<br />Available troops: <ul>';
+      /*infoText += '<br />Available troops: <ul>';
       for (var i = 0; i < this.groups.humans.children.length; i++) {
         var human = this.groups.humans.children[i];
         if (human.homebase == this.selectedBarracks) {
@@ -416,7 +416,7 @@ Jurassic.Game.prototype = {
           infoText += '</li>';
         }
       }
-      infoText += '</ul>';
+      infoText += '</ul>';*/
     } else {
       infoText += '<br/>Click something to select it. Spacebar to pause.';
     }
