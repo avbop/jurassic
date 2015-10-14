@@ -106,7 +106,9 @@ Jurassic.Game.prototype = {
     this.groups.fences.add(fence);
     var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 165, 85, gate1);
     this.groups.fences.add(fence);
-    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 280, 70, gate1);
+    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 280, 35, gate1);
+    this.groups.fences.add(fence);
+    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 315, 35, gate2);
     this.groups.fences.add(fence);
     var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 380, 30, gate2);
     this.groups.fences.add(fence);
