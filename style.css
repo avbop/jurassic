@@ -29,3 +29,9 @@ canvas {
   left: 30%;
   width: 40%;
 }
+
+#source {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
