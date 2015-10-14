@@ -180,7 +180,7 @@ Jurassic.Game.prototype = {
           } else {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           }
-        } else if (this.dinosLost < 40) {
+        } else if (this.dinosLost < 30) {
           if (rand < 0.1) {
             this.addDino(Jurassic.Stegosaurus(this.game, x, y));
           } else if (rand < 0.5) {
@@ -188,11 +188,21 @@ Jurassic.Game.prototype = {
           } else {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           }
+        } else if (this.dinosLost < 40) {
+          if (rand < 0.1) {
+            this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
+          } else if (rand < 0.4) {
+            this.addDino(Jurassic.Stegosaurus(this.game, x, y));
+          } else if (rand < 0.7) {
+            this.addDino(Jurassic.Pterodactyl(this.game, x, y));
+          } else {
+            this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
+          }
         } else {
           if (rand < 0.1) {
-            this.addDino(Jurassic.Stegosaurus(this.game, x, y));
-          } else if (rand < 0.4) {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
+          } else if (rand < 0.4) {
+            this.addDino(Jurassic.Pterodactyl(this.game, x, y));
           } else if (rand < 0.7) {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           } else {
