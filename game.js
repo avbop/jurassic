@@ -408,13 +408,21 @@ Jurassic.Game.prototype = {
     if (this.selectedDino) {
       infoText += '<br/>Selected: ';
       infoText += this.selectedDino.name;
-      infoText += ' (' + this.selectedDino.health + '/' + this.selectedDino.fullHealth + ')';
+      infoText += ' ('
+      infoText += 'health: ' + this.selectedDino.health + '/' + this.selectedDino.fullHealth + ' | ';
+      infoText += 'att: ' + Math.round(this.selectedDino.attackPercent * 100) / 10 + ' | ';
+      infoText += 'def: ' + Math.round(this.selectedDino.defendPercent * 100) / 10;
+      infoText +=  ')'
     } else if (this.selectedHuman) {
       infoText += '<br/>Selected: ';
       infoText += this.selectedHuman.name;
       infoText += ' - ';
       infoText += this.selectedHuman.description;
-      infoText += ' (' + this.selectedHuman.health + '/' + this.selectedHuman.fullHealth + ')';
+      infoText += ' ('
+      infoText += 'health: ' + this.selectedHuman.health + '/' + this.selectedHuman.fullHealth + ' | ';
+      infoText += 'att: ' + Math.round(this.selectedHuman.attackPercent * 100) / 10 + ' | ';
+      infoText += 'def: ' + Math.round(this.selectedHuman.defendPercent * 100) / 10;
+      infoText +=  ')'
     } else if (this.selectedBarracks) {
       infoText += '<br/>Selected: ';
       infoText += this.selectedBarracks.name;

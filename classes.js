@@ -50,6 +50,8 @@ Jurassic.Character = function (game, name, x, y, velocity, health, attack, attac
   this.attackStrength = attack; // Damage per attack.
   this.attackPercent = attackPercent; // Percentage of attacks that land.
   this.defendPercent = defendPercent; // Percentage of enemies' attacks that land.
+  this.maxAttackPercent = 0.95; // Maximum attack efficacy.
+  this.maxDefendPercent = 0.95; // Maximum defence efficacy.
 };
 Jurassic.Character.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Character.prototype.constructor = Jurassic.Character;
@@ -111,10 +113,18 @@ Jurassic.Character.prototype.damage = function (amount) {
   }
 };
 Jurassic.Character.prototype.attackSuccess = function () {
-  this.attackPercent += 0.1 * (1 - this.attackPercent);
+  if (this.attackPercent < this.maxAttackPercent) {
+    this.attackPercent += 0.1 * (1 - this.attackPercent);
+  } else {
+    this.attackPercent = this.maxAttackPercent;
+  }
 };
 Jurassic.Character.prototype.defendSuccess = function () {
-  this.defendPercent += 0.1 * (1 - this.defendPercent);
+  if (this.defendPercent < this.maxDefendPercent) {
+    this.defendPercent += 0.1 * (1 - this.defendPercent);
+  } else {
+    this.defendPercent = this.maxDefendPercent;
+  }
 };
 Jurassic.Character.prototype.fight = function (enemy) {
   if (!this.aerial && enemy.aerial) {
@@ -136,6 +146,8 @@ Jurassic.Dinosaur = function (game, x, y, colour, health) {
   Jurassic.Character.call(this, game, '*-saurus', x, y, 150, health, 5, 0.3, 0.3, 'dino');
   this.prize = 1000;
   this.aerial = false;
+  this.maxDefendPercent = 0.9;
+  this.maxAttackPercent = 0.9;
   this.animations.add('unselected', [colour], 2, false);
   this.animations.add('selected', [Jurassic.DINO_COLOUR.RED, colour], 2, true);
   this.animations.play('unselected');
@@ -150,11 +162,6 @@ Jurassic.Dinosaur.prototype.defaultMove = function () {
     this.direction -= Math.PI / 10;
   }
   this.velocity = this.maxVelocity;
-};
-Jurassic.Dinosaur.prototype.defendSuccess = function () {
-  if (this.defendPercent < 0.8) {
-    this.defendPercent += 0.1 * (1 - this.defendPercent);
-  }
 };
 
 Jurassic.Human = function (game, x, y, homebase, colour, health) {

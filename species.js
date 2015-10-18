@@ -7,6 +7,8 @@ Jurassic.Dog = function (game, x, y, homebase) {
   h.name = Jurassic.DOG_NAMES[Jurassic.randomInt(0, Jurassic.DOG_NAMES.length - 1)];
   h.description = 'A guard dog.';
   h.attackStrength = 10;
+  h.maxDefendPercent = 0.7;
+  h.maxAttackPercent = 0.7;
   h.maxVelocity = 150;
   h.price = 200;
   return h;
@@ -16,6 +18,7 @@ Jurassic.Grunt = function (game, x, y, homebase) {
   var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.TEAL, 100);
   h.description = 'A soldier.';
   h.attackStrength = 50;
+  h.maxDefendPercent = 0.9;
   h.maxVelocity = 100;
   h.price = 1000;
   return h;
@@ -47,6 +50,8 @@ Jurassic.Helicopter = function (game, x, y, homebase) {
   h.name = 'AH-64 Apache';
   h.description = 'A helicopter.';
   h.attackStrength = 200;
+  h.maxDefendPercent = 0.8;
+  h.maxAttackPercent = 0.8;
   h.maxVelocity = 250;
   h.aerial = true;
   h.price = 80000;
