@@ -2,12 +2,30 @@
 
 /* ACU (Humans) */
 
+/*Jurassic.Tourist = function (game, x, y) {
+  var h = new Jurassic.Human(game, x, y, null, Jurassic.HUMAN_COLOUR.AQUA, 50);
+  h.name = Jurassic.HUMAN_NAMES[Jurassic.randomInt(0, Jurassic.HUMAN_NAMES.length - 1)];
+  h.description = 'A tourist.';
+  h.attackStrength = 0;
+  h.maxAttackPercent = 0;
+  h.maxVelocity = 30;
+  h.defaultMove = function () {
+    var rand = Math.random();
+    if (rand < .1) {
+      this.direction += Math.PI / 10;
+    } else if (rand < .2) {
+      this.direction -= Math.PI / 10;
+    }
+    this.velocity = this.maxVelocity;
+  };
+  return h;
+}*/
+
 Jurassic.Dog = function (game, x, y, homebase) {
   var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.GREEN, 50);
   h.name = Jurassic.DOG_NAMES[Jurassic.randomInt(0, Jurassic.DOG_NAMES.length - 1)];
   h.description = 'A guard dog.';
   h.attackStrength = 10;
-  h.maxDefendPercent = 0.7;
   h.maxAttackPercent = 0.7;
   h.maxVelocity = 150;
   h.price = 200;

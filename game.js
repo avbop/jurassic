@@ -39,6 +39,7 @@ Jurassic.Game = function (game) {
   this.groups = {
     dinos: null,
     humans: null,
+    //tourists: null,
     buildings: null,
     gates: null,
     fences: null
@@ -90,6 +91,7 @@ Jurassic.Game.prototype = {
     this.groups.fences = this.add.group();
     this.groups.gates = this.add.group();
     this.groups.buildings = this.add.group();
+    //this.groups.tourists = this.add.group();
     this.groups.dinos = this.add.group();
     this.groups.humans = this.add.group();
 
@@ -129,6 +131,11 @@ Jurassic.Game.prototype = {
       this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks2));
     }
 
+    /*for (var i = 0; i < 20; i++) {
+      var t = Jurassic.Tourist(this.game, Jurassic.randomInt(10, Jurassic.BORDER - 10), Jurassic.randomInt(10, this.world.height - 10));
+      this.groups.tourists.add(t);
+    }*/
+
     // Starting enemy.
     this.addDino(Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
 
@@ -160,6 +167,10 @@ Jurassic.Game.prototype = {
       this.physics.arcade.collide(this.groups.gates, this.groups.dinos, null, this.testGate, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
       this.physics.arcade.overlap(this.groups.humans, this.groups.dinos, this.fight, null, this);
+      /*this.physics.arcade.overlap(this.groups.tourists, this.groups.dinos, this.fight, null, this);
+      this.physics.arcade.collide(this.groups.fences, this.groups.tourists, null, null, this);
+      this.physics.arcade.collide(this.groups.buildings, this.groups.tourists, null, null, this);
+      this.physics.arcade.collide(this.groups.gates, this.groups.tourists, null, this.testGate, this);*/
       if (this.groups.dinos.countLiving() <= this.dinosLost / 6 && Math.random() < 0.005) {
         var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width);
         var y = this.world.randomY;
@@ -222,6 +233,9 @@ Jurassic.Game.prototype = {
         this.humansLost++;
         human.destroy();
       }, this);
+      /*this.groups.tourists.forEachDead(function (tourist) {
+        tourist.destroy();
+      }, this);*/
     }
     this.updateUI();
   },
@@ -405,6 +419,7 @@ Jurassic.Game.prototype = {
     }
     var infoText = 'Assets neutralised: ' + this.dinosLost;
     infoText += ' | ACUs lost: ' + this.humansLost;
+    //infoText += ' | Tourists remaining: ' + this.groups.tourists.countLiving();
     if (this.selectedDino) {
       infoText += '<br/>Selected: ';
       infoText += this.selectedDino.name;

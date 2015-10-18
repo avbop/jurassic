@@ -146,8 +146,8 @@ Jurassic.Dinosaur = function (game, x, y, colour, health) {
   Jurassic.Character.call(this, game, '*-saurus', x, y, 150, health, 5, 0.3, 0.3, 'dino');
   this.prize = 1000;
   this.aerial = false;
-  this.maxDefendPercent = 0.9;
-  this.maxAttackPercent = 0.9;
+  this.maxDefendPercent = 0.8;
+  this.maxAttackPercent = 0.8;
   this.animations.add('unselected', [colour], 2, false);
   this.animations.add('selected', [Jurassic.DINO_COLOUR.RED, colour], 2, true);
   this.animations.play('unselected');
@@ -180,7 +180,7 @@ Jurassic.Human = function (game, x, y, homebase, colour, health) {
 Jurassic.Human.prototype = Object.create(Jurassic.Character.prototype);
 Jurassic.Human.prototype.constructor = Jurassic.Human;
 Jurassic.Human.prototype.defaultMove = function () {
-  if (this.homebase.position.distance(this.position) > 20) {
+  if (this.homebase && this.homebase.position.distance(this.position) > 20) {
     this.setPrey(this.homebase);
   } else {
     this.velocity = 0;
