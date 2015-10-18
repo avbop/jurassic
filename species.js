@@ -38,7 +38,7 @@ Jurassic.Tank = function (game, x, y, homebase) {
   h.attackStrength = 200;
   h.defendPercent = 0.5;
   h.maxVelocity = 70;
-  h.price = 50000;
+  h.price = 40000;
   return h;
 }
 
@@ -49,14 +49,7 @@ Jurassic.Helicopter = function (game, x, y, homebase) {
   h.attackStrength = 200;
   h.maxVelocity = 250;
   h.aerial = true;
-  h.price = 100000;
-  h.defaultMove = function () {
-    Jurassic.Human.prototype.defaultMove.call(this);
-    if (Math.random() < 0.0001) {
-      this.animations.play('selected');
-      this.game.time.events.add(Phaser.Timer.SECOND * 5, this.kill, this);
-    }
-  };
+  h.price = 80000;
   return h;
 }
 
