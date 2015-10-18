@@ -41,7 +41,7 @@ Jurassic.Preloader.prototype = {
     this.preloadBar.scale.setTo(1, 0.5);
     this.load.setPreloadSprite(this.preloadBar);
 
-    this.load.image('fence', 'assets/fence.png');
+    this.load.spritesheet('fence', 'assets/fence.png', 8, 8);
     this.load.image('bg', 'assets/bg.png');
     this.load.spritesheet('gate', 'assets/gate.png', 8, 30);
     this.load.spritesheet('human', 'assets/squares.png', 8, 8);

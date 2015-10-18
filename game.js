@@ -10,7 +10,7 @@ var Jurassic = {
   GATE_DELAY: 3 * Phaser.Timer.SECOND,
   INFO_UI_ID: 'info',
   MAX_DINOS: 6, // Maximum number of dinos to have alive at once.
-  WALL_HEALTH: 100000, // Health of fences and gates.
+  WALL_HEALTH: 50000, // Health of fences and gates.
   HUMAN_COLOUR: {
     RED: 0,
     TEAL: 1,
@@ -140,10 +140,6 @@ Jurassic.Game.prototype = {
 
     // Starting enemy.
     this.addDino(Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
-    // TODO: clean this up
-    this.groups.dinos.forEach(function (d) {
-      d.setPrey(this.defaultBarracks);
-    }, this);
 
     this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
     this.modScore(0); // Set starting score.
@@ -317,11 +313,9 @@ Jurassic.Game.prototype = {
   onGate: function (gate, character) {
     character.atTarget(gate);
     if (this.groups.humans.getIndex(character) > -1) {
-      console.log('human on gate');
       gate.open();
     }
     if (this.groups.dinos.getIndex(character) > -1) {
-      console.log('dino on gate');
       this.attackWall(gate, character);
     }
   },
@@ -348,12 +342,14 @@ Jurassic.Game.prototype = {
 
   attackWall: function (wall, dino) {
     if (Math.random() < dino.attackPercent) {
-      wall.health -= dino.attackStrength
+      wall.health -= dino.attackStrength;
+      if (wall.health < Jurassic.WALL_HEALTH / 10) {
+        wall.animations.play('attack');
+      }
     }
     if (wall.health < 1) {
       wall.visible = false;
     }
-    console.log('wall health: ', wall.health);
   },
 
   inBuilding: function (building, human) {
