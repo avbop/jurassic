@@ -9,6 +9,7 @@ var Jurassic = {
   STORE_X: 15,
   GATE_DELAY: 3 * Phaser.Timer.SECOND,
   INFO_UI_ID: 'info',
+  MAX_DINOS: 6, // Maximum number of dinos to have alive at once.
   HUMAN_COLOUR: {
     RED: 0,
     TEAL: 1,
@@ -171,19 +172,19 @@ Jurassic.Game.prototype = {
       this.physics.arcade.collide(this.groups.fences, this.groups.tourists, null, null, this);
       this.physics.arcade.collide(this.groups.buildings, this.groups.tourists, null, null, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.tourists, null, this.testGate, this);*/
-      if (this.groups.dinos.countLiving() <= this.dinosLost / 6 && Math.random() < 0.005) {
+      if (this.groups.dinos.countLiving() <= this.dinosLost / 5 && this.groups.dinos.countLiving() < Jurassic.MAX_DINOS && Math.random() < 0.005) {
         var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width);
         var y = this.world.randomY;
         var rand = Math.random();
-        if (this.dinosLost < 5) {
+        if (this.dinosLost < 3) {
           this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));
-        } else if (this.dinosLost < 10) {
+        } else if (this.dinosLost < 6) {
           if (rand < 0.3) {
             this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));
           } else {
             this.addDino(Jurassic.Stegosaurus(this.game, x, y));
           }
-        } else if (this.dinosLost < 20) {
+        } else if (this.dinosLost < 10) {
           if (rand < 0.1) {
             this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));
           } else if (rand < 0.5) {
@@ -191,7 +192,7 @@ Jurassic.Game.prototype = {
           } else {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           }
-        } else if (this.dinosLost < 30) {
+        } else if (this.dinosLost < 20) {
           if (rand < 0.1) {
             this.addDino(Jurassic.Stegosaurus(this.game, x, y));
           } else if (rand < 0.5) {
@@ -199,13 +200,13 @@ Jurassic.Game.prototype = {
           } else {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           }
-        } else if (this.dinosLost < 40) {
+        } else if (this.dinosLost < 30) {
           if (rand < 0.1) {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           } else if (rand < 0.4) {
             this.addDino(Jurassic.Stegosaurus(this.game, x, y));
           } else if (rand < 0.7) {
-            this.addDino(Jurassic.Pterodactyl(this.game, x, y));
+            this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.humans));
           } else {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           }
@@ -213,7 +214,7 @@ Jurassic.Game.prototype = {
           if (rand < 0.1) {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           } else if (rand < 0.4) {
-            this.addDino(Jurassic.Pterodactyl(this.game, x, y));
+            this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.humans));
           } else if (rand < 0.7) {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           } else {
