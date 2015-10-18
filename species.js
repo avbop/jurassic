@@ -27,7 +27,7 @@ Jurassic.Dog = function (game, x, y, homebase) {
   h.description = 'A guard dog.';
   h.attackStrength = 10;
   h.maxVelocity = 150;
-  h.price = 200;
+  h.price = 100;
   return h;
 }
 
@@ -36,7 +36,7 @@ Jurassic.Grunt = function (game, x, y, homebase) {
   h.description = 'A soldier.';
   h.attackStrength = 50;
   h.maxVelocity = 100;
-  h.price = 1000;
+  h.price = 700;
   return h;
 }
 
@@ -44,25 +44,25 @@ Jurassic.Armour = function (game, x, y, homebase) {
   var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.LIME, 70);
   h.description = 'An armoured soldier.';
   h.attackStrength = 40;
-  h.defendPercent = 0.85;
+  h.defendPercent = 0.95;
   h.maxVelocity = 80;
-  h.price = 1400;
+  h.price = 1000;
   return h;
 }
 
 Jurassic.Tank = function (game, x, y, homebase) {
-  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.PURPLE, 500);
+  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.PURPLE, 1000);
   h.name = 'M1 Abrams';
   h.description = 'A tank.';
   h.attackStrength = 200;
-  h.defendPercent = 0.5;
-  h.maxVelocity = 100;
-  h.price = 40000;
+  h.defendPercent = 0.8;
+  h.maxVelocity = 150;
+  h.price = 10000;
   return h;
 }
 
 Jurassic.Helicopter = function (game, x, y, homebase) {
-  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.BLUE, 500);
+  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.BLUE, 1000);
   h.name = 'AH-64 Apache';
   h.description = 'A helicopter.';
   h.attackStrength = 200;
@@ -70,7 +70,7 @@ Jurassic.Helicopter = function (game, x, y, homebase) {
   h.maxAttackPercent = 0.8;
   h.maxVelocity = 250;
   h.aerial = true;
-  h.price = 80000;
+  h.price = 30000;
   return h;
 }
 
@@ -78,7 +78,7 @@ Jurassic.Helicopter = function (game, x, y, homebase) {
 
 Jurassic.BabyStegosaurus = function (game, x, y) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.PINK, 200);
-  d.prize = 500;
+  d.prize = 1000;
   d.name = 'Baby Stegosaurus';
   d.attackStrength = 10;
   d.maxVelocity = 50;
@@ -100,7 +100,6 @@ Jurassic.Brachiosaurus = function (game, x, y) {
   d.name = 'Brachiosaurus';
   d.attackStrength = 50;
   d.maxVelocity = 30;
-  d.defendPercent = 0.5;
   return d;
 }
 
@@ -110,8 +109,6 @@ Jurassic.Tyrranosaurus = function (game, x, y) {
   d.name = 'Tyrranosaurus Rex';
   d.attackStrength = 100;
   d.maxVelocity = 200;
-  d.defendPercent = 0.5;
-  d.attackPercent = 0.5;
   return d;
 }
 

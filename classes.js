@@ -50,8 +50,8 @@ Jurassic.Character = function (game, name, x, y, velocity, health, attack, attac
   this.attackStrength = attack; // Damage per attack.
   this.attackPercent = attackPercent; // Percentage of attacks that land.
   this.defendPercent = defendPercent; // Percentage of enemies' attacks that land.
-  this.maxAttackPercent = 0.95; // Maximum attack efficacy.
-  this.maxDefendPercent = 0.95; // Maximum defence efficacy.
+  this.maxAttackPercent = 1; // Maximum attack efficacy.
+  this.maxDefendPercent = 0.98; // Maximum defence efficacy.
 };
 Jurassic.Character.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Character.prototype.constructor = Jurassic.Character;
@@ -155,8 +155,8 @@ Jurassic.Dinosaur = function (game, x, y, colour, health) {
   Jurassic.Character.call(this, game, '*-saurus', x, y, 150, health, 5, 0.3, 0.3, 'dino');
   this.prize = 1000;
   this.aerial = false;
-  this.maxDefendPercent = 0.8;
-  this.maxAttackPercent = 0.8;
+  this.maxDefendPercent = 0.7;
+  this.maxAttackPercent = 0.7;
   this.animations.add('unselected', [colour], 2, false);
   this.animations.add('selected', [Jurassic.DINO_COLOUR.RED, colour], 2, true);
   this.animations.play('unselected');

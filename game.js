@@ -58,12 +58,7 @@ Jurassic.Game = function (game) {
 
 Jurassic.Game.prototype = {
   create: function () {
-    /* [FPS]
-    this.time.advancedTiming = true;
-    this.fpsText = this.add.text(100, 10, 'score', { fontSize: '16px', fill: '#000' });
-    this.fpsText.fixedToCamera = true; */
-
-    this.stage.disableVisibilityChange = false; // Pause when out of focus.
+    this.stage.disableVisibilityChange = true; // Pause when out of focus.
     this.world.setBounds(0, 0, Jurassic.WORLD_WIDTH, Jurassic.WORLD_HEIGHT);
     this.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -156,6 +151,10 @@ Jurassic.Game.prototype = {
     }, this);
 
     this.updateUI();
+    /* [FPS]
+    this.time.advancedTiming = true;
+    this.fpsText = this.add.text(300, 10, 'score', { fontSize: '16px', fill: '#000' });
+    this.fpsText.fixedToCamera = true; //*/
   },
 
   update: function () {
@@ -177,7 +176,7 @@ Jurassic.Game.prototype = {
         var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width);
         var y = this.world.randomY;
         var rand = Math.random();
-        if (this.dinosLost < 3) {
+        if (this.dinosLost < 4) {
           this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));
         } else if (this.dinosLost < 6) {
           if (rand < 0.3) {
@@ -185,7 +184,7 @@ Jurassic.Game.prototype = {
           } else {
             this.addDino(Jurassic.Stegosaurus(this.game, x, y));
           }
-        } else if (this.dinosLost < 10) {
+        } else if (this.dinosLost < 15) {
           if (rand < 0.1) {
             this.addDino(Jurassic.Stegosaurus(this.game, x, y));
           } else if (rand < 0.5) {
@@ -193,7 +192,7 @@ Jurassic.Game.prototype = {
           } else {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           }
-        } else if (this.dinosLost < 20) {
+        } else if (this.dinosLost < 25) {
           if (rand < 0.1) {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           } else if (rand < 0.5) {
@@ -205,7 +204,7 @@ Jurassic.Game.prototype = {
             this.addDino(r0);
             this.addDino(r1);
           }
-        } else if (this.dinosLost < 30) {
+        } else if (this.dinosLost < 35) {
           if (rand < 0.1) {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           } else if (rand < 0.4) {
