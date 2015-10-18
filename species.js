@@ -41,11 +41,11 @@ Jurassic.Grunt = function (game, x, y, homebase) {
 }
 
 Jurassic.Armour = function (game, x, y, homebase) {
-  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.LIME, 70);
+  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.LIME, 150);
   h.description = 'An armoured soldier.';
-  h.attackStrength = 40;
+  h.attackStrength = 50;
   h.defendPercent = 0.95;
-  h.maxVelocity = 80;
+  h.maxVelocity = 90;
   h.price = 1000;
   return h;
 }
@@ -68,9 +68,9 @@ Jurassic.Helicopter = function (game, x, y, homebase) {
   h.attackStrength = 200;
   h.maxDefendPercent = 0.8;
   h.maxAttackPercent = 0.8;
-  h.maxVelocity = 250;
+  h.maxVelocity = 230;
   h.aerial = true;
-  h.price = 30000;
+  h.price = 20000;
   return h;
 }
 
@@ -108,16 +108,16 @@ Jurassic.Tyrranosaurus = function (game, x, y) {
   d.prize = 5000;
   d.name = 'Tyrranosaurus Rex';
   d.attackStrength = 100;
-  d.maxVelocity = 200;
+  d.maxVelocity = 150;
   return d;
 }
 
 Jurassic.Pterodactyl = function (game, x, y, targets) {
-  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.YELLOW, 1000);
+  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.YELLOW, 2000);
   d.prize = 3000;
   d.name = 'Pterodactyl';
-  d.attackStrength = 30;
-  d.maxVelocity = 250;
+  d.attackStrength = 50;
+  d.maxVelocity = 230;
   d.aerial = true;
   d.targets = targets;
   d.defaultMove = function () {
@@ -136,11 +136,11 @@ Jurassic.Pterodactyl = function (game, x, y, targets) {
 }
 
 Jurassic.Raptor = function (game, x, y, targets) {
-  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.ORANGE, 1000);
+  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.ORANGE, 2000);
   d.prize = 3000;
   d.name = 'Velociraptor';
-  d.attackStrength = 50;
-  d.maxVelocity = 230;
+  d.attackStrength = 100;
+  d.maxVelocity = 200;
   d.targets = targets;
   d.defaultMove = function () {
     if (Math.random() < 0.003){
@@ -166,6 +166,6 @@ Jurassic.Mutant = function (game, x, y, health) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.WHITE, health);
   d.prize = 5000;
   d.name = 'Genetic Engineering Model X-' + d.id;
-  d.maxVelocity = 400;
+  d.maxVelocity = 350;
   return d;
 }
