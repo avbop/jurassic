@@ -37,7 +37,7 @@ Jurassic.Tank = function (game, x, y, homebase) {
   h.description = 'A tank.';
   h.attackStrength = 200;
   h.defendPercent = 0.5;
-  h.maxVelocity = 70;
+  h.maxVelocity = 100;
   h.price = 40000;
   return h;
 }
