@@ -187,19 +187,23 @@ Jurassic.Game.prototype = {
           }
         } else if (this.dinosLost < 10) {
           if (rand < 0.1) {
-            this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));
-          } else if (rand < 0.5) {
-            this.addDino(Jurassic.Stegosaurus(this.game, x, y));
-          } else {
-            this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
-          }
-        } else if (this.dinosLost < 20) {
-          if (rand < 0.1) {
             this.addDino(Jurassic.Stegosaurus(this.game, x, y));
           } else if (rand < 0.5) {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           } else {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
+          }
+        } else if (this.dinosLost < 20) {
+          if (rand < 0.1) {
+            this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
+          } else if (rand < 0.5) {
+            this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
+          } else {
+            var r0 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
+            var r1 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
+            r1.setPrey(r0);
+            this.addDino(r0);
+            this.addDino(r1);
           }
         } else if (this.dinosLost < 30) {
           if (rand < 0.1) {

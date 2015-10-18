@@ -138,6 +138,33 @@ Jurassic.Pterodactyl = function (game, x, y, targets) {
   return d;
 }
 
+Jurassic.Raptor = function (game, x, y, targets) {
+  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.ORANGE, 1000);
+  d.prize = 3000;
+  d.name = 'Velociraptor';
+  d.attackStrength = 50;
+  d.maxVelocity = 230;
+  d.targets = targets;
+  d.defaultMove = function () {
+    if (Math.random() < 0.003){
+      this.targets.forEachAlive(function (t) {
+        if (!this.prey && !t.aerial) {
+          this.setPrey(t);
+        }
+      }, this);
+    }
+    Jurassic.Dinosaur.prototype.defaultMove.call(this);
+  };
+  d.move = function () {
+    if (!(this.prey && this.prey.name == this.name && this.prey.position.distance(this.position) < 50)) {
+      Jurassic.Dinosaur.prototype.move.call(this);
+    } else if (this.prey && this.prey.name == this.name) {
+      this.velocity = 0;
+    }
+  };
+  return d;
+}
+
 Jurassic.Mutant = function (game, x, y, health) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.WHITE, health);
   d.prize = 5000;
