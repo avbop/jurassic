@@ -105,6 +105,15 @@ Jurassic.Character.prototype.setPrey = function (prey) {
   this.prey = prey;
   this.setTarget(prey);
 };
+Jurassic.Character.prototype.atTarget = function (target) {
+  if (this.target == target) {
+    if (this.prey) {
+      this.setPrey(this.prey);
+    } else {
+      this.setTarget(null);
+    }
+  }
+};
 Jurassic.Character.prototype.damage = function (amount) {
   this.health -= amount;
   if (this.health <= 0) {
@@ -207,6 +216,7 @@ Jurassic.Gate = function (game, x, y) {
   game.physics.arcade.enable(this);
   this.body.immovable = true;
   this.targetable = true;
+  this.health = Jurassic.WALL_HEALTH;
   var openAnim = this.animations.add('open', [5, 6], 2, true);
   var openingAnim = this.animations.add('opening', [0, 2, 3, 4], 10, false);
   openingAnim.onComplete.add(function () {
@@ -238,6 +248,7 @@ Jurassic.Fence = function (game, x, y, height, gate) {
   this.body.immovable = true;
   this.anchor.setTo(0.5, 0);
   this.gate = gate;
+  this.health = Jurassic.WALL_HEALTH;
 };
 Jurassic.Fence.prototype = Object.create(Phaser.TileSprite.prototype);
 Jurassic.Fence.prototype.constructor = Jurassic.Fence;

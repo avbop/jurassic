@@ -10,6 +10,7 @@ var Jurassic = {
   GATE_DELAY: 3 * Phaser.Timer.SECOND,
   INFO_UI_ID: 'info',
   MAX_DINOS: 6, // Maximum number of dinos to have alive at once.
+  WALL_HEALTH: 100000, // Health of fences and gates.
   HUMAN_COLOUR: {
     RED: 0,
     TEAL: 1,
@@ -139,6 +140,10 @@ Jurassic.Game.prototype = {
 
     // Starting enemy.
     this.addDino(Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
+    // TODO: clean this up
+    this.groups.dinos.forEach(function (d) {
+      d.setPrey(this.defaultBarracks);
+    }, this);
 
     this.scoreText = this.add.text(10, 10, 'score', { fontSize: '16px', fill: '#fff' });
     this.modScore(0); // Set starting score.
@@ -163,10 +168,10 @@ Jurassic.Game.prototype = {
       this.physics.arcade.collide(this.groups.dinos, this.groups.dinos, null, this.isAerial, this);
       this.physics.arcade.collide(this.groups.humans, this.groups.humans, null, this.isAerial, this);
       this.physics.arcade.overlap(this.groups.buildings, this.groups.humans, this.inBuilding, null, this);
-      this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, this.isAerial, this);
-      this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, this.isAerial, this);
-      this.physics.arcade.collide(this.groups.gates, this.groups.dinos, null, this.testGate, this);
-      this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.openGate, this.testGate, this);
+      this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, this.testFence, this);
+      this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, this.testFence, this);
+      this.physics.arcade.collide(this.groups.gates, this.groups.dinos, this.onGate, this.testGate, this);
+      this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.onGate, this.testGate, this);
       this.physics.arcade.overlap(this.groups.humans, this.groups.dinos, this.fight, null, this);
       /*this.physics.arcade.overlap(this.groups.tourists, this.groups.dinos, this.fight, null, this);
       this.physics.arcade.collide(this.groups.fences, this.groups.tourists, null, null, this);
@@ -309,24 +314,46 @@ Jurassic.Game.prototype = {
     this.scoreText.setText('$' + Math.floor(this.score));
   },
 
-  openGate: function (gate, human) {
-    gate.open();
+  onGate: function (gate, character) {
+    character.atTarget(gate);
+    if (this.groups.humans.getIndex(character) > -1) {
+      console.log('human on gate');
+      gate.open();
+    }
+    if (this.groups.dinos.getIndex(character) > -1) {
+      console.log('dino on gate');
+      this.attackWall(gate, character);
+    }
   },
 
   testGate: function (gate, character) {
+    character.atTarget(gate);
     if (character.aerial) return false;
-    if (character.prey) {
-      character.setTarget(character.prey);
-    } else if (character.target == gate) {
-      character.setTarget(null);
-    }
-    return !gate.isOpen;
+    return !gate.isOpen && gate.visible;
   },
 
   onFence: function (fence, character) {
     if (character.target || character.prey) {
       character.setTarget(fence.gate);
     }
+    if (this.groups.dinos.getIndex(character) > -1) {
+      this.attackWall(fence, character);
+    }
+  },
+
+  testFence: function (fence, character) {
+    if (character.aerial) return false;
+    return fence.visible;
+  },
+
+  attackWall: function (wall, dino) {
+    if (Math.random() < dino.attackPercent) {
+      wall.health -= dino.attackStrength
+    }
+    if (wall.health < 1) {
+      wall.visible = false;
+    }
+    console.log('wall health: ', wall.health);
   },
 
   inBuilding: function (building, human) {
