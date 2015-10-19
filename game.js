@@ -8,9 +8,9 @@ var Jurassic = {
   BORDER: 250,
   STORE_X: 15,
   GATE_DELAY: 3 * Phaser.Timer.SECOND,
-  INFO_UI_ID: 'info',
+  INFO_UI_ID: 'info', // HTML ID of div that shows info.
   INSTR_LS_KEY: 'instructions', // localStorage key for instructions box.
-  INSTR_VER: '1', // Version of instructions.
+  INSTR_VER: '2', // Version of instructions.
   MAX_DINOS: 6, // Maximum number of dinos to have alive at once.
   WALL_HEALTH: 50000, // Health of fences and gates.
   HUMAN_COLOUR: {
@@ -56,6 +56,7 @@ Jurassic.Game = function (game) {
   this.selectedDino = null;
   this.selectedBarracks = null;
   this.defaultBarracks = null;
+  this.pauseButton = null;
 };
 
 Jurassic.Game.prototype = {
@@ -65,7 +66,7 @@ Jurassic.Game.prototype = {
     this.physics.startSystem(Phaser.Physics.ARCADE);
 
     var bg = this.add.sprite(0, 0, 'bg');
-    bg.inputEnabled = true;
+    /*bg.inputEnabled = true;
     bg.events.onInputDown.add(function () {
       if (this.selectedDino) {
         this.selectedDino.animations.play('unselected');
@@ -79,7 +80,7 @@ Jurassic.Game.prototype = {
         this.selectedBarracks.animations.play('unselected');
         this.selectedBarracks = null;
       }
-    }, this);
+    }, this);*/
 
     this.addButton(Jurassic.Dog, 10);
     this.addButton(Jurassic.Grunt, 5);
@@ -142,15 +143,12 @@ Jurassic.Game.prototype = {
     this.modScore(0); // Set starting score.
 
     var pauseKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    pauseKey.onDown.add(function () {
-      if (this.physics.arcade.isPaused) {
-        this.physics.arcade.isPaused = false;
-        this.time.events.resume();
-      } else {
-        this.physics.arcade.isPaused = true;
-        this.time.events.pause();
-      }
-    }, this);
+    pauseKey.onDown.add(this.togglePause, this);
+    this.pauseButton = this.add.button(this.world.width - 10, 10, 'buttons', this.togglePause, this);
+    this.pauseButton.anchor.setTo(1, 0);
+    this.pauseButton.animations.add('paused', [0, 1], 2, true);
+    this.pauseButton.animations.add('unpaused', [0], 10, false);
+    this.pauseButton.animations.play('unpaused');
 
     this.updateUI();
     /* [FPS]
@@ -485,5 +483,17 @@ Jurassic.Game.prototype = {
       infoText += '<br/>Click something to select it. Spacebar to pause.';
     }
     document.getElementById(Jurassic.INFO_UI_ID).innerHTML = infoText;
+  },
+
+  togglePause: function () {
+    if (this.physics.arcade.isPaused) {
+      this.physics.arcade.isPaused = false;
+      this.time.events.resume();
+      this.pauseButton.animations.play('unpaused');
+    } else {
+      this.physics.arcade.isPaused = true;
+      this.time.events.pause();
+      this.pauseButton.animations.play('paused');
+    }
   }
 };
