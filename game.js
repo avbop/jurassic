@@ -201,7 +201,7 @@ Jurassic.Game.prototype = {
             r1.setPrey(r0);
             this.addDino(r0);
             this.addDino(r1);
-          } else if (rand < 0.7) {
+          } else if (rand < 0.8) {
             this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.humans));
           } else {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
@@ -213,9 +213,9 @@ Jurassic.Game.prototype = {
             r1.setPrey(r0);
             this.addDino(r0);
             this.addDino(r1);
-          } else if (rand < 0.5) {
-            this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.humans));
           } else if (rand < 0.6) {
+            this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.humans));
+          } else if (rand < 0.7) {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           } else {
             var irex = Jurassic.Mutant(this.game, x, y, this.dinosLost * 100);
