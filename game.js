@@ -11,7 +11,7 @@ var Jurassic = {
   INFO_UI_ID: 'info', // HTML ID of div that shows info.
   INSTR_LS_KEY: 'instructions', // localStorage key for instructions box.
   INSTR_VER: '2', // Version of instructions.
-  MAX_DINOS: 6, // Maximum number of dinos to have alive at once.
+  MAX_DINOS: 10, // Maximum number of dinos to have alive at once.
   WALL_HEALTH: 50000, // Health of fences and gates.
   HUMAN_COLOUR: {
     RED: 0,
