@@ -57,7 +57,7 @@ Jurassic.Tank = function (game, x, y, homebase) {
   h.attackStrength = 200;
   h.defendPercent = 0.8;
   h.maxVelocity = 150;
-  h.price = 10000;
+  h.price = 15000;
   return h;
 }
 
@@ -70,7 +70,7 @@ Jurassic.Helicopter = function (game, x, y, homebase) {
   h.maxAttackPercent = 0.8;
   h.maxVelocity = 230;
   h.aerial = true;
-  h.price = 20000;
+  h.price = 40000;
   return h;
 }
 
