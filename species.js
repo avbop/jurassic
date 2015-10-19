@@ -62,11 +62,10 @@ Jurassic.Tank = function (game, x, y, homebase) {
 }
 
 Jurassic.Helicopter = function (game, x, y, homebase) {
-  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.BLUE, 1000);
+  var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.BLUE, 2000);
   h.name = 'AH-64 Apache';
   h.description = 'A helicopter.';
   h.attackStrength = 200;
-  h.maxDefendPercent = 0.8;
   h.maxAttackPercent = 0.8;
   h.maxVelocity = 230;
   h.aerial = true;
@@ -113,10 +112,10 @@ Jurassic.Tyrranosaurus = function (game, x, y) {
 }
 
 Jurassic.Pterodactyl = function (game, x, y, targets) {
-  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.YELLOW, 3000);
+  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.YELLOW, 2000);
   d.prize = 3000;
   d.name = 'Pterodactyl';
-  d.attackStrength = 70;
+  d.attackStrength = 100;
   d.maxVelocity = 230;
   d.aerial = true;
   d.targets = targets;
