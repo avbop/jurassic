@@ -68,7 +68,7 @@ Jurassic.Preloader.prototype = {
 
 // Initialise the game in the game div. Call this last so it loads the states first.
 (function () {
-  if (localStorage.getItem('instructions')) {
+  if (localStorage.getItem(Jurassic.INSTR_LS_KEY) === Jurassic.INSTR_VER) {
     document.getElementById('instructions').style.display = 'none';
   }
   var game = new Phaser.Game(Jurassic.WORLD_WIDTH, Jurassic.WORLD_HEIGHT, Phaser.AUTO, 'game');
@@ -82,6 +82,6 @@ Jurassic.Preloader.prototype = {
 
 // The opening instructions screen.
 function closeInstructions() {
-  localStorage.setItem('instructions', true);
+  localStorage.setItem(Jurassic.INSTR_LS_KEY, Jurassic.INSTR_VER);
   document.getElementById('instructions').style.display = 'none';
 }
