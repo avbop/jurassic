@@ -121,11 +121,11 @@ Jurassic.Pterodactyl = function (game, x, y, targets) {
   d.aerial = true;
   d.targets = targets;
   d.defaultMove = function () {
-    if (Math.random() < 0.003){
+    if (Math.random() < 0.01){
       this.targets.forEachAlive(function (t) {
         if (!this.prey) {
           this.setPrey(t);
-        } else if (!this.prey.aerial && t.aerial) {
+        } else if (this.prey.aerial && !t.aerial) {
           this.setPrey(t);
         }
       }, this);
@@ -143,7 +143,7 @@ Jurassic.Raptor = function (game, x, y, targets) {
   d.maxVelocity = 200;
   d.targets = targets;
   d.defaultMove = function () {
-    if (Math.random() < 0.003){
+    if (Math.random() < 0.01){
       this.targets.forEachAlive(function (t) {
         if (!this.prey && !t.aerial) {
           this.setPrey(t);
