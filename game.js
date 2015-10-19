@@ -12,7 +12,7 @@ var Jurassic = {
   INSTR_LS_KEY: 'instructions', // localStorage key for instructions box.
   INSTR_VER: '2', // Version of instructions.
   MAX_DINOS: 10, // Maximum number of dinos to have alive at once.
-  WALL_HEALTH: 50000, // Health of fences and gates.
+  WALL_HEALTH: 30000, // Health of fences and gates.
   HUMAN_COLOUR: {
     RED: 0,
     TEAL: 1,
