@@ -70,7 +70,7 @@ Jurassic.Helicopter = function (game, x, y, homebase) {
   h.maxAttackPercent = 0.8;
   h.maxVelocity = 230;
   h.aerial = true;
-  h.price = 40000;
+  h.price = 25000;
   return h;
 }
 
