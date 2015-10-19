@@ -73,31 +73,43 @@ Jurassic.Game.prototype = {
     this.addButton(Jurassic.Tank, 1);
     this.addButton(Jurassic.Helicopter, 1);
 
-    this.groups.fences = this.add.group();
     this.groups.gates = this.add.group();
+    this.groups.fences = this.add.group();
     this.groups.buildings = this.add.group();
     //this.groups.tourists = this.add.group();
     this.groups.dinos = this.add.group();
     this.groups.humans = this.add.group();
 
-    var gate0 = new Jurassic.Gate(this.game, Jurassic.BORDER, 50);
+    var gate0 = new Jurassic.Gate(this.game, Jurassic.BORDER, 50, true);
     this.groups.gates.add(gate0);
-    var gate1 = new Jurassic.Gate(this.game, Jurassic.BORDER, 250);
+    var gate1 = new Jurassic.Gate(this.game, Jurassic.BORDER, 250, true);
     this.groups.gates.add(gate1);
-    var gate2 = new Jurassic.Gate(this.game, Jurassic.BORDER, 350);
+    var gate2 = new Jurassic.Gate(this.game, Jurassic.BORDER, 350, true);
     this.groups.gates.add(gate2);
+    var gate3 = new Jurassic.Gate(this.game, this.world.width - 100, 350, true);
+    this.groups.gates.add(gate3);
+    var gate4 = new Jurassic.Gate(this.game, this.world.width - 50, 320, false);
+    this.groups.gates.add(gate4);
 
-    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 0, 50, gate0);
+    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 0, 8, 50, gate0);
     this.groups.fences.add(fence);
-    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 80, 85, gate0);
+    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 80, 8, 85, gate0);
     this.groups.fences.add(fence);
-    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 165, 85, gate1);
+    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 165, 8, 85, gate1);
     this.groups.fences.add(fence);
-    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 280, 35, gate1);
+    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 280, 8, 35, gate1);
     this.groups.fences.add(fence);
-    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 315, 35, gate2);
+    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 315, 8, 35, gate2);
     this.groups.fences.add(fence);
-    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 380, 30, gate2);
+    var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 380, 8, 30, gate2);
+    this.groups.fences.add(fence);
+    var fence = new Jurassic.Fence(this.game, this.world.width - 100, 380, 8, 30, gate3);
+    this.groups.fences.add(fence);
+    var fence = new Jurassic.Fence(this.game, this.world.width - 100, 328, 8, 22, gate3);
+    this.groups.fences.add(fence);
+    var fence = new Jurassic.Fence(this.game, this.world.width - 84, 320, 39, 8, gate4);
+    this.groups.fences.add(fence);
+    var fence = new Jurassic.Fence(this.game, this.world.width - 18, 320, 34, 8, gate4);
     this.groups.fences.add(fence);
 
     var barracks0 = new Jurassic.Building(this.game, 150, 50, 'Barracks A');
@@ -107,6 +119,8 @@ Jurassic.Game.prototype = {
     this.defaultBarracks = barracks1;
     var barracks2 = new Jurassic.Building(this.game, 150, 350, 'Barracks C');
     this.addBarracks(barracks2);
+    var barracks3 = new Jurassic.Building(this.game, this.world.width - 50, 365, 'Barracks X');
+    this.addBarracks(barracks3);
 
     // Starting complement.
     for (var i = 0; i < 5; i++) {
@@ -158,8 +172,8 @@ Jurassic.Game.prototype = {
       this.physics.arcade.collide(this.groups.buildings, this.groups.tourists, null, null, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.tourists, null, this.testGate, this);*/
       if (this.groups.dinos.countLiving() < Jurassic.MAX_DINOS && Math.random() < 0.003) {
-        var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width);
-        var y = this.world.randomY;
+        var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width - 100);
+        var y = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.height - 100);
         var rand = Math.random();
         if (this.dinosLost < 4) {
           this.addDino(Jurassic.BabyStegosaurus(this.game, x, y));

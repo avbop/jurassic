@@ -45,6 +45,7 @@ Jurassic.Preloader.prototype = {
     this.load.image('bg', 'assets/bg.png');
     this.load.spritesheet('buttons', 'assets/buttons.png', 24, 24);
     this.load.spritesheet('gate', 'assets/gate.png', 8, 30);
+    this.load.spritesheet('gate-horiz', 'assets/gate-horiz.png', 30, 8);
     this.load.spritesheet('human', 'assets/squares.png', 8, 8);
     this.load.spritesheet('dino', 'assets/circles.png', 10, 10);
     this.load.spritesheet('building', 'assets/building.png', 50, 50);
