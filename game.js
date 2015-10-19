@@ -208,7 +208,11 @@ Jurassic.Game.prototype = {
           if (rand < 0.1) {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           } else if (rand < 0.4) {
-            this.addDino(Jurassic.Stegosaurus(this.game, x, y));
+            var r0 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
+            var r1 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
+            r1.setPrey(r0);
+            this.addDino(r0);
+            this.addDino(r1);
           } else if (rand < 0.7) {
             this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.humans));
           } else {
@@ -216,10 +220,14 @@ Jurassic.Game.prototype = {
           }
         } else {
           if (rand < 0.1) {
-            this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
-          } else if (rand < 0.4) {
+            var r0 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
+            var r1 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
+            r1.setPrey(r0);
+            this.addDino(r0);
+            this.addDino(r1);
+          } else if (rand < 0.5) {
             this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.humans));
-          } else if (rand < 0.7) {
+          } else if (rand < 0.6) {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           } else {
             var irex = Jurassic.Mutant(this.game, x, y, this.dinosLost * 100);
@@ -344,6 +352,7 @@ Jurassic.Game.prototype = {
   },
 
   attackWall: function (wall, dino) {
+    if (dino.aerial) return;
     if (Math.random() < dino.attackPercent) {
       wall.health -= dino.attackStrength;
       if (wall.health < Jurassic.WALL_HEALTH / 10) {
