@@ -203,8 +203,10 @@ Jurassic.Building = function (game, x, y, name) {
   this.targetable = true;
   this.anchor.setTo(0.5, 0.5);
   this.name = name;
+  this.health = Jurassic.WALL_HEALTH;
   this.animations.add('unselected', [1], 2, false);
   this.animations.add('selected', [0, 1], 2, true);
+  this.animations.add('attack', [1, 0, 1], 10, false);
   this.animations.play('unselected');
 };
 Jurassic.Building.prototype = Object.create(Phaser.Sprite.prototype);

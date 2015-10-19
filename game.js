@@ -86,10 +86,6 @@ Jurassic.Game.prototype = {
     this.groups.gates.add(gate1);
     var gate2 = new Jurassic.Gate(this.game, Jurassic.BORDER, 350, true);
     this.groups.gates.add(gate2);
-    var gate3 = new Jurassic.Gate(this.game, this.world.width - 100, 350, true);
-    this.groups.gates.add(gate3);
-    var gate4 = new Jurassic.Gate(this.game, this.world.width - 50, 320, false);
-    this.groups.gates.add(gate4);
 
     var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 0, 8, 50, gate0);
     this.groups.fences.add(fence);
@@ -103,14 +99,6 @@ Jurassic.Game.prototype = {
     this.groups.fences.add(fence);
     var fence = new Jurassic.Fence(this.game, Jurassic.BORDER, 380, 8, 30, gate2);
     this.groups.fences.add(fence);
-    var fence = new Jurassic.Fence(this.game, this.world.width - 100, 380, 8, 30, gate3);
-    this.groups.fences.add(fence);
-    var fence = new Jurassic.Fence(this.game, this.world.width - 100, 328, 8, 22, gate3);
-    this.groups.fences.add(fence);
-    var fence = new Jurassic.Fence(this.game, this.world.width - 84, 320, 39, 8, gate4);
-    this.groups.fences.add(fence);
-    var fence = new Jurassic.Fence(this.game, this.world.width - 18, 320, 34, 8, gate4);
-    this.groups.fences.add(fence);
 
     var barracks0 = new Jurassic.Building(this.game, 150, 50, 'Barracks A');
     this.addBarracks(barracks0);
@@ -119,7 +107,7 @@ Jurassic.Game.prototype = {
     this.defaultBarracks = barracks1;
     var barracks2 = new Jurassic.Building(this.game, 150, 350, 'Barracks C');
     this.addBarracks(barracks2);
-    var barracks3 = new Jurassic.Building(this.game, this.world.width - 50, 365, 'Barracks X');
+    var barracks3 = new Jurassic.Building(this.game, this.world.width - 50, this.world.height - 50, 'Barracks X');
     this.addBarracks(barracks3);
 
     // Starting complement.
@@ -161,9 +149,10 @@ Jurassic.Game.prototype = {
     if (!this.physics.arcade.isPaused) {
       this.physics.arcade.collide(this.groups.dinos, this.groups.dinos, null, this.isAerial, this);
       this.physics.arcade.collide(this.groups.humans, this.groups.humans, null, this.isAerial, this);
+      this.physics.arcade.collide(this.groups.buildings, this.groups.dinos, this.attackWall, this.testWall, this);
       this.physics.arcade.overlap(this.groups.buildings, this.groups.humans, this.inBuilding, null, this);
-      this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, this.testFence, this);
-      this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, this.testFence, this);
+      this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, this.testWall, this);
+      this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, this.testWall, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.dinos, this.onGate, this.testGate, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.onGate, this.testGate, this);
       this.physics.arcade.overlap(this.groups.humans, this.groups.dinos, this.fight, null, this);
@@ -345,7 +334,7 @@ Jurassic.Game.prototype = {
     }
   },
 
-  testFence: function (fence, character) {
+  testWall: function (fence, character) {
     if (character.aerial) return false;
     return fence.visible;
   },
