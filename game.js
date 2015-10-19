@@ -204,7 +204,7 @@ Jurassic.Game.prototype = {
             this.addDino(r0);
             this.addDino(r1);
           }
-        } else if (this.dinosLost < 25) {
+        } else if (this.dinosLost < 30) {
           if (rand < 0.1) {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           } else if (rand < 0.4) {
