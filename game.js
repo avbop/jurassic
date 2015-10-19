@@ -66,21 +66,6 @@ Jurassic.Game.prototype = {
     this.physics.startSystem(Phaser.Physics.ARCADE);
 
     var bg = this.add.sprite(0, 0, 'bg');
-    /*bg.inputEnabled = true;
-    bg.events.onInputDown.add(function () {
-      if (this.selectedDino) {
-        this.selectedDino.animations.play('unselected');
-        this.selectedDino = null;
-      }
-      if (this.selectedHuman) {
-        this.selectedHuman.animations.play('unselected');
-        this.selectedHuman = null;
-      }
-      if (this.selectedBarracks) {
-        this.selectedBarracks.animations.play('unselected');
-        this.selectedBarracks = null;
-      }
-    }, this);*/
 
     this.addButton(Jurassic.Dog, 10);
     this.addButton(Jurassic.Grunt, 5);
@@ -377,19 +362,29 @@ Jurassic.Game.prototype = {
   },
 
   humanClick: function (human, ptr) {
-    if (this.selectedHuman) {
+    if (this.selectedHuman == human) {
       this.selectedHuman.animations.play('unselected');
+      this.selectedHuman = null;
+    } else {
+      if (this.selectedHuman) {
+        this.selectedHuman.animations.play('unselected');
+      }
+      this.selectedHuman = human;
+      this.selectedHuman.animations.play('selected');
     }
-    this.selectedHuman = human;
-    this.selectedHuman.animations.play('selected');
   },
 
   dinoClick: function (dino, ptr) {
-    if (this.selectedDino) {
+    if (this.selectedDino == dino) {
       this.selectedDino.animations.play('unselected');
+      this.selectedDino = null;
+    } else {
+      if (this.selectedDino) {
+        this.selectedDino.animations.play('unselected');
+      }
+      this.selectedDino = dino;
+      this.selectedDino.animations.play('selected');
     }
-    this.selectedDino = dino;
-    this.selectedDino.animations.play('selected');
   },
 
   barracksClick: function (barracks, ptr) {
@@ -424,7 +419,6 @@ Jurassic.Game.prototype = {
       this.selectedDino = null;
     }
     if (this.selectedHuman && !this.selectedHuman.alive) {
-      this.selectedHuman.animations.play('unselected');
       this.selectedHuman = null;
     }
     if (this.selectedDino && this.selectedHuman) {
@@ -503,6 +497,21 @@ Jurassic.Game.prototype = {
       this.physics.arcade.isPaused = true;
       this.time.events.pause();
       this.pauseButton.animations.play('paused');
+    }
+  },
+
+  deselectAll: function () {
+    if (this.selectedDino) {
+      this.selectedDino.animations.play('unselected');
+      this.selectedDino = null;
+    }
+    if (this.selectedHuman) {
+      this.selectedHuman.animations.play('unselected');
+      this.selectedHuman = null;
+    }
+    if (this.selectedBarracks) {
+      this.selectedBarracks.animations.play('unselected');
+      this.selectedBarracks = null;
     }
   }
 };
