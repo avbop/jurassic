@@ -113,10 +113,10 @@ Jurassic.Tyrranosaurus = function (game, x, y) {
 }
 
 Jurassic.Pterodactyl = function (game, x, y, targets) {
-  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.YELLOW, 2000);
+  var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.YELLOW, 3000);
   d.prize = 3000;
   d.name = 'Pterodactyl';
-  d.attackStrength = 50;
+  d.attackStrength = 70;
   d.maxVelocity = 230;
   d.aerial = true;
   d.targets = targets;
