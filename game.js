@@ -197,7 +197,7 @@ Jurassic.Game.prototype = {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           } else if (rand < 0.4) {
             var r0 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
-            var r1 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
+            var r1 = Jurassic.Raptor(this.game, x + 10, y + 10, this.groups.humans);
             r1.setPrey(r0);
             this.addDino(r0);
             this.addDino(r1);
@@ -209,7 +209,7 @@ Jurassic.Game.prototype = {
         } else {
           if (rand < 0.1) {
             var r0 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
-            var r1 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
+            var r1 = Jurassic.Raptor(this.game, x + 10, y + 10, this.groups.humans);
             r1.setPrey(r0);
             this.addDino(r0);
             this.addDino(r1);
