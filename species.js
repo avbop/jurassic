@@ -80,7 +80,7 @@ Jurassic.BabyStegosaurus = function (game, x, y) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.PINK, 200);
   d.prize = 1000;
   d.name = 'Baby Stegosaurus';
-  d.attackStrength = 10;
+  d.attackStrength = 30;
   d.maxVelocity = 50;
   return d;
 }
@@ -89,7 +89,7 @@ Jurassic.Stegosaurus = function (game, x, y) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.MAROON, 500);
   d.prize = 2000;
   d.name = 'Stegosaurus';
-  d.attackStrength = 30;
+  d.attackStrength = 50;
   d.maxVelocity = 100;
   return d;
 }
