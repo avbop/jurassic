@@ -82,7 +82,6 @@ Jurassic.Helicopter = function (game, x, y, homebase) {
 
 Jurassic.BabyStegosaurus = function (game, x, y) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.PINK, 200);
-  d.prize = 1000;
   d.name = 'Baby Stegosaurus';
   d.attackStrength = 30;
   d.maxVelocity = 50;
@@ -91,7 +90,6 @@ Jurassic.BabyStegosaurus = function (game, x, y) {
 
 Jurassic.Stegosaurus = function (game, x, y) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.MAROON, 500);
-  d.prize = 2000;
   d.name = 'Stegosaurus';
   d.attackStrength = 50;
   d.maxVelocity = 100;
@@ -100,7 +98,6 @@ Jurassic.Stegosaurus = function (game, x, y) {
 
 Jurassic.Brachiosaurus = function (game, x, y) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.SAND, 3000);
-  d.prize = 3000;
   d.name = 'Brachiosaurus';
   d.attackStrength = 50;
   d.maxVelocity = 30;
@@ -109,7 +106,6 @@ Jurassic.Brachiosaurus = function (game, x, y) {
 
 Jurassic.Tyrranosaurus = function (game, x, y) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.BURNT, 10000);
-  d.prize = 5000;
   d.name = 'Tyrranosaurus Rex';
   d.attackStrength = 100;
   d.maxVelocity = 150;
@@ -118,7 +114,6 @@ Jurassic.Tyrranosaurus = function (game, x, y) {
 
 Jurassic.Pterodactyl = function (game, x, y, targets) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.YELLOW, 2000);
-  d.prize = 3000;
   d.name = 'Pterodactyl';
   d.attackStrength = 100;
   d.maxVelocity = 230;
@@ -141,7 +136,6 @@ Jurassic.Pterodactyl = function (game, x, y, targets) {
 
 Jurassic.Raptor = function (game, x, y, targets) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.ORANGE, 2000);
-  d.prize = 3000;
   d.name = 'Velociraptor';
   d.attackStrength = 100;
   d.maxVelocity = 200;
@@ -168,7 +162,6 @@ Jurassic.Raptor = function (game, x, y, targets) {
 
 Jurassic.Mutant = function (game, x, y, health) {
   var d = new Jurassic.Dinosaur(game, x, y, Jurassic.DINO_COLOUR.WHITE, health);
-  d.prize = 5000;
   d.name = 'Genetic Engineering Model X-' + d.id;
   d.maxVelocity = 350;
   return d;

@@ -153,7 +153,6 @@ Jurassic.Character.prototype.fight = function (enemy) {
 Jurassic.Dinosaur = function (game, x, y, colour, health) {
   // context, game, name, x, y, velocity, health, attack strength, attack %, defend %, asset key
   Jurassic.Character.call(this, game, '*-saurus', x, y, 150, health, 5, 0.3, 0.3, 'dino');
-  this.prize = 1000;
   this.aerial = false;
   this.maxDefendPercent = 0.7;
   this.maxAttackPercent = 0.7;

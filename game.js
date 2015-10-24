@@ -236,7 +236,6 @@ Jurassic.Game.prototype = {
       }
       this.groups.dinos.forEachDead(function (dino) {
         this.dinosLost++;
-        this.modScore(dino.prize);
         dino.destroy();
       }, this);
       this.groups.humans.forEachDead(function (human) {
