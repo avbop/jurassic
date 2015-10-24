@@ -10,7 +10,7 @@ var Jurassic = {
   GATE_DELAY: 3 * Phaser.Timer.SECOND,
   INFO_UI_ID: 'info', // HTML ID of div that shows info.
   INSTR_LS_KEY: 'instructions', // localStorage key for instructions box.
-  INSTR_VER: '2', // Version of instructions.
+  INSTR_VER: '3', // Version of instructions.
   MAX_DINOS: 10, // Maximum number of dinos to have alive at once.
   WALL_HEALTH: 30000, // Health of fences and gates.
   N_TOURISTS: 20, // Number of starting tourists.
@@ -36,7 +36,8 @@ var Jurassic = {
     PINK: 7
   },
   HUMAN_NAMES: ['Joe', 'John', 'Socrates', 'Robert', 'Steve', 'Owen', 'Malcolm', 'Rick', 'Chris', 'Victor', 'Zachary', 'Henry', 'Alan', 'Ian', 'Tim', 'Ray', 'Dennis'],
-  DOG_NAMES: ['Fido', 'Rover', 'Rex']
+  DOG_NAMES: ['Fido', 'Rover', 'Rex'],
+  LOSS_MESSAGE: 'The park is closed pending a health and safety investigation.'
 };
 
 // The Game state.
@@ -254,6 +255,9 @@ Jurassic.Game.prototype = {
         tourist.destroy();
       }, this);
     }
+    if (this.groups.tourists.countLiving() < 1) {
+      this.modScore(-this.score * 10 - 100);
+    }
     this.updateUI();
   },
 
@@ -315,11 +319,14 @@ Jurassic.Game.prototype = {
 
   modScore: function (delta) {
     // Do all score changes here.
-    this.score += delta;
-    if (this.score < 0) {
-      this.score = 0;
+    if (this.score > -1) {
+      this.score += delta;
+      this.scoreText.setText('$' + Math.floor(this.score));
     }
-    this.scoreText.setText('$' + Math.floor(this.score));
+    else {
+      this.score = -10;
+      this.scoreText.setText(Jurassic.LOSS_MESSAGE);
+    }
   },
 
   onGate: function (gate, character) {
