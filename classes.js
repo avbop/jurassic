@@ -280,9 +280,8 @@ Jurassic.Button.nextY = 50;
 Jurassic.Button.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Button.prototype.constructor = Jurassic.Button;
 
-Jurassic.Clock = function (phaserText, phaserTimer) {
+Jurassic.Clock = function (phaserText) {
   this.text = phaserText;
-  this.timer = phaserTimer
   this.minutes = 0;
   this.seconds = 0;
   this.minutesStr = '00';

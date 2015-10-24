@@ -132,11 +132,10 @@ Jurassic.Game.prototype = {
     this.scoreText = this.add.text(70, 10, 'score', { fontSize: '16px', fill: '#fff' });
     this.modScore(0); // Set starting score.
     var t = this.add.text(10, 10, '00:00', { fontSize: '16px', fill: '#fff' });
-    this.clock = new Jurassic.Clock(t, this.time.create());
-    this.clock.timer.loop(Phaser.Timer.SECOND, function () {
+    this.clock = new Jurassic.Clock(t);
+    this.time.events.loop(Phaser.Timer.SECOND, function () {
       this.clock.tick();
     }, this);
-    this.clock.timer.start();
 
     var pauseKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     pauseKey.onDown.add(this.togglePause, this);
