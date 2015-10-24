@@ -280,3 +280,31 @@ Jurassic.Button = function (game, type, quantity) {
 Jurassic.Button.nextY = 50;
 Jurassic.Button.prototype = Object.create(Phaser.Sprite.prototype);
 Jurassic.Button.prototype.constructor = Jurassic.Button;
+
+Jurassic.Clock = function (phaserText, phaserTimer) {
+  this.text = phaserText;
+  this.timer = phaserTimer
+  this.minutes = 0;
+  this.seconds = 0;
+  this.minutesStr = '00';
+  this.secondsStr = '00';
+}
+Jurassic.Clock.prototype.constructor = Jurassic.Clock;
+Jurassic.Clock.prototype.tick = function () {
+  this.seconds++;
+  if (this.seconds > 59) {
+    this.minutes++;
+    this.seconds = 0;
+  }
+  if (this.minutes < 10) {
+    this.minutesStr = '0' + this.minutes;
+  } else {
+    this.minutesStr = this.minutes.toString();
+  }
+  if (this.seconds < 10) {
+    this.secondsStr = '0' + this.seconds;
+  } else {
+    this.secondsStr = this.seconds.toString();
+  }
+  this.text.setText(this.minutesStr + ':' + this.secondsStr);
+}
