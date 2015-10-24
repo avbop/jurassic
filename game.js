@@ -13,6 +13,8 @@ var Jurassic = {
   INSTR_VER: '2', // Version of instructions.
   MAX_DINOS: 10, // Maximum number of dinos to have alive at once.
   WALL_HEALTH: 30000, // Health of fences and gates.
+  N_TOURISTS: 20, // Number of starting tourists.
+  INCOME: 10, // Income per tourist per second.
   HUMAN_COLOUR: {
     RED: 0,
     TEAL: 1,
@@ -119,7 +121,7 @@ Jurassic.Game.prototype = {
       this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks2));
     }
 
-    for (var i = 0; i < 20; i++) {
+    for (var i = 0; i < Jurassic.N_TOURISTS; i++) {
       var t = Jurassic.Tourist(this.game, Jurassic.randomInt(10, Jurassic.BORDER - 10), Jurassic.randomInt(10, this.world.height - 10));
       t.inputEnabled = true;
       t.events.onInputDown.add(this.humanClick, this);
@@ -135,6 +137,7 @@ Jurassic.Game.prototype = {
     this.clock = new Jurassic.Clock(t);
     this.time.events.loop(Phaser.Timer.SECOND, function () {
       this.clock.tick();
+      this.modScore(Jurassic.INCOME * this.groups.tourists.countLiving());
     }, this);
 
     var pauseKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -157,17 +160,23 @@ Jurassic.Game.prototype = {
     if (!this.physics.arcade.isPaused) {
       this.physics.arcade.collide(this.groups.dinos, this.groups.dinos, null, this.isAerial, this);
       this.physics.arcade.collide(this.groups.humans, this.groups.humans, null, this.isAerial, this);
+
       this.physics.arcade.collide(this.groups.buildings, this.groups.dinos, this.attackWall, this.testWall, this);
       this.physics.arcade.overlap(this.groups.buildings, this.groups.humans, this.inBuilding, null, this);
+
       this.physics.arcade.collide(this.groups.fences, this.groups.dinos, this.onFence, this.testWall, this);
       this.physics.arcade.collide(this.groups.fences, this.groups.humans, this.onFence, this.testWall, this);
+
       this.physics.arcade.collide(this.groups.gates, this.groups.dinos, this.onGate, this.testGate, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.onGate, this.testGate, this);
+
       this.physics.arcade.overlap(this.groups.humans, this.groups.dinos, this.fight, null, this);
+
       this.physics.arcade.overlap(this.groups.tourists, this.groups.dinos, this.fight, null, this);
       this.physics.arcade.collide(this.groups.fences, this.groups.tourists, null, null, this);
       this.physics.arcade.collide(this.groups.buildings, this.groups.tourists, null, null, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.tourists, null, this.testGate, this);
+
       if (this.groups.dinos.countLiving() < Jurassic.MAX_DINOS && Math.random() < 0.004) {
         var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width - 100);
         var y = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.height - 100);
@@ -194,8 +203,8 @@ Jurassic.Game.prototype = {
           } else if (rand < 0.5) {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           } else {
-            var r0 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
-            var r1 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
+            var r0 = Jurassic.Raptor(this.game, x, y, this.groups.tourists);
+            var r1 = Jurassic.Raptor(this.game, x, y, this.groups.tourists);
             r1.setPrey(r0);
             this.addDino(r0);
             this.addDino(r1);
@@ -205,30 +214,30 @@ Jurassic.Game.prototype = {
             this.addDino(Jurassic.Brachiosaurus(this.game, x, y));
           } else if (rand < 0.4) {
             var r0 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
-            var r1 = Jurassic.Raptor(this.game, x + 10, y + 10, this.groups.humans);
+            var r1 = Jurassic.Raptor(this.game, x + 10, y + 10, this.groups.tourists);
             r1.setPrey(r0);
             this.addDino(r0);
             this.addDino(r1);
           } else if (rand < 0.8) {
-            this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.humans));
+            this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.tourists));
           } else {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           }
         } else {
           if (rand < 0.1) {
             var r0 = Jurassic.Raptor(this.game, x, y, this.groups.humans);
-            var r1 = Jurassic.Raptor(this.game, x + 10, y + 10, this.groups.humans);
+            var r1 = Jurassic.Raptor(this.game, x + 10, y + 10, this.groups.tourists);
             r1.setPrey(r0);
             this.addDino(r0);
             this.addDino(r1);
           } else if (rand < 0.6) {
-            this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.humans));
+            this.addDino(Jurassic.Pterodactyl(this.game, x, y, this.groups.tourists));
           } else if (rand < 0.7) {
             this.addDino(Jurassic.Tyrranosaurus(this.game, x, y));
           } else {
             var irex = Jurassic.Mutant(this.game, x, y, this.dinosLost * 100);
             irex.attackStrength = this.dinosLost * 10;
-            irex.setPrey(this.groups.humans.children[Jurassic.randomInt(0, this.groups.humans.children.length - 1)]);
+            irex.setPrey(this.groups.humans.children[Jurassic.randomInt(0, this.groups.tourists.children.length - 1)]);
             this.addDino(irex);
           }
         }
