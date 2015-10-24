@@ -43,7 +43,7 @@ Jurassic.Game = function (game) {
   this.groups = {
     dinos: null,
     humans: null,
-    //tourists: null,
+    tourists: null,
     buildings: null,
     gates: null,
     fences: null
@@ -76,7 +76,7 @@ Jurassic.Game.prototype = {
     this.groups.gates = this.add.group();
     this.groups.fences = this.add.group();
     this.groups.buildings = this.add.group();
-    //this.groups.tourists = this.add.group();
+    this.groups.tourists = this.add.group();
     this.groups.dinos = this.add.group();
     this.groups.humans = this.add.group();
 
@@ -118,10 +118,12 @@ Jurassic.Game.prototype = {
       this.addHuman(Jurassic.Dog(this.game, 150 + Jurassic.randomInt(-50, 50), 300, barracks2));
     }
 
-    /*for (var i = 0; i < 20; i++) {
+    for (var i = 0; i < 20; i++) {
       var t = Jurassic.Tourist(this.game, Jurassic.randomInt(10, Jurassic.BORDER - 10), Jurassic.randomInt(10, this.world.height - 10));
+      t.inputEnabled = true;
+      t.events.onInputDown.add(this.humanClick, this);
       this.groups.tourists.add(t);
-    }*/
+    }
 
     // Starting enemy.
     this.addDino(Jurassic.BabyStegosaurus(this.game, Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width), this.world.randomY));
@@ -156,10 +158,10 @@ Jurassic.Game.prototype = {
       this.physics.arcade.collide(this.groups.gates, this.groups.dinos, this.onGate, this.testGate, this);
       this.physics.arcade.collide(this.groups.gates, this.groups.humans, this.onGate, this.testGate, this);
       this.physics.arcade.overlap(this.groups.humans, this.groups.dinos, this.fight, null, this);
-      /*this.physics.arcade.overlap(this.groups.tourists, this.groups.dinos, this.fight, null, this);
+      this.physics.arcade.overlap(this.groups.tourists, this.groups.dinos, this.fight, null, this);
       this.physics.arcade.collide(this.groups.fences, this.groups.tourists, null, null, this);
       this.physics.arcade.collide(this.groups.buildings, this.groups.tourists, null, null, this);
-      this.physics.arcade.collide(this.groups.gates, this.groups.tourists, null, this.testGate, this);*/
+      this.physics.arcade.collide(this.groups.gates, this.groups.tourists, null, this.testGate, this);
       if (this.groups.dinos.countLiving() < Jurassic.MAX_DINOS && Math.random() < 0.005) {
         var x = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.width - 100);
         var y = Jurassic.randomInt(Jurassic.BORDER + 20, this.world.height - 100);
@@ -234,9 +236,9 @@ Jurassic.Game.prototype = {
         this.humansLost++;
         human.destroy();
       }, this);
-      /*this.groups.tourists.forEachDead(function (tourist) {
+      this.groups.tourists.forEachDead(function (tourist) {
         tourist.destroy();
-      }, this);*/
+      }, this);
     }
     this.updateUI();
   },
@@ -263,9 +265,6 @@ Jurassic.Game.prototype = {
     var button = new Jurassic.Button(this.game, type, quantity);
     button.inputEnabled = true;
     button.events.onInputOver.add(function (button, ptr) {
-      /*if (button.caption) {
-        button.caption.destroy();
-      }*/
       if (this.score >= button.price) {
         button.caption = this.add.text(button.x, button.y, button.description, { fontSize: '12px', fill: '#fff' });
         button.caption.anchor.setTo(0, 0.5);

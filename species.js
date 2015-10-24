@@ -1,8 +1,8 @@
 "use strict";
 
-/* ACU (Humans) */
+/* Humans */
 
-/*Jurassic.Tourist = function (game, x, y) {
+Jurassic.Tourist = function (game, x, y) {
   var h = new Jurassic.Human(game, x, y, null, Jurassic.HUMAN_COLOUR.AQUA, 50);
   h.name = Jurassic.HUMAN_NAMES[Jurassic.randomInt(0, Jurassic.HUMAN_NAMES.length - 1)];
   h.description = 'A tourist.';
@@ -18,8 +18,13 @@
     }
     this.velocity = this.maxVelocity;
   };
+  h.setPrey = function (prey) {
+    this.prey = null;
+    this.target = null;
+  }
+  h.setTarget = h.setPrey;
   return h;
-}*/
+}
 
 Jurassic.Dog = function (game, x, y, homebase) {
   var h = new Jurassic.Human(game, x, y, homebase, Jurassic.HUMAN_COLOUR.GREEN, 50);
