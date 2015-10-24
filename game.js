@@ -14,7 +14,7 @@ var Jurassic = {
   MAX_DINOS: 10, // Maximum number of dinos to have alive at once.
   WALL_HEALTH: 30000, // Health of fences and gates.
   N_TOURISTS: 20, // Number of starting tourists.
-  INCOME: 10, // Income per tourist per second.
+  INCOME: 50, // Income per tourist per second.
   HUMAN_COLOUR: {
     RED: 0,
     TEAL: 1,
