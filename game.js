@@ -457,7 +457,7 @@ Jurassic.Game.prototype = {
     }
     var infoText = 'Assets neutralised: ' + this.dinosLost;
     infoText += ' | ACUs lost: ' + this.humansLost;
-    //infoText += ' | Tourists remaining: ' + this.groups.tourists.countLiving();
+    infoText += ' | Tourists remaining: ' + this.groups.tourists.countLiving();
     if (this.selectedDino) {
       infoText += '<br/>Selected: ';
       infoText += this.selectedDino.name;
