@@ -137,8 +137,10 @@ Jurassic.Game.prototype = {
     var t = this.add.text(10, 10, '00:00', { fontSize: '16px', fill: '#fff' });
     this.clock = new Jurassic.Clock(t);
     this.time.events.loop(Phaser.Timer.SECOND, function () {
-      this.clock.tick();
-      this.modScore(Jurassic.INCOME * this.groups.tourists.countLiving());
+      if (this.score > -1) {
+        this.clock.tick();
+        this.modScore(Jurassic.INCOME * this.groups.tourists.countLiving());
+      }
     }, this);
 
     var pauseKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
